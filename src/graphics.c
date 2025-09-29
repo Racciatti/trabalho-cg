@@ -246,25 +246,26 @@ Object3D* Graphics_CreateCube() {
     cube->vertices[7] = Vec3_Create(-50,  50,  50);
     
     cube->edge_count = 12;
-    cube->edges = malloc(12 * sizeof(Edge));
+    cube->edges = malloc(2 * cube->edge_count * sizeof(int));
     if (!cube->edges) {
         free(cube->vertices);
         free(cube);
         return NULL;
     }
     
-    cube->edges[0] = (Edge){0, 1};
-    cube->edges[1] = (Edge){1, 2};
-    cube->edges[2] = (Edge){2, 3};
-    cube->edges[3] = (Edge){3, 0};
-    cube->edges[4] = (Edge){4, 5};
-    cube->edges[5] = (Edge){5, 6};
-    cube->edges[6] = (Edge){6, 7};
-    cube->edges[7] = (Edge){7, 4};
-    cube->edges[8] = (Edge){0, 4};
-    cube->edges[9] = (Edge){1, 5};
-    cube->edges[10] = (Edge){2, 6};
-    cube->edges[11] = (Edge){3, 7};
+    // Store edges as pairs of vertex indices
+    cube->edges[0] = 0; cube->edges[1] = 1;   // Edge 0
+    cube->edges[2] = 1; cube->edges[3] = 2;   // Edge 1  
+    cube->edges[4] = 2; cube->edges[5] = 3;   // Edge 2
+    cube->edges[6] = 3; cube->edges[7] = 0;   // Edge 3
+    cube->edges[8] = 4; cube->edges[9] = 5;   // Edge 4
+    cube->edges[10] = 5; cube->edges[11] = 6; // Edge 5
+    cube->edges[12] = 6; cube->edges[13] = 7; // Edge 6
+    cube->edges[14] = 7; cube->edges[15] = 4; // Edge 7
+    cube->edges[16] = 0; cube->edges[17] = 4; // Edge 8
+    cube->edges[18] = 1; cube->edges[19] = 5; // Edge 9
+    cube->edges[20] = 2; cube->edges[21] = 6; // Edge 10
+    cube->edges[22] = 3; cube->edges[23] = 7; // Edge 11
     
     return cube;
 }
@@ -366,17 +367,117 @@ void Graphics_RenderObject3D(Canvas* canvas, Object3D* object, Matrix4x4 transfo
     int centerY = canvas->height / 2;
     
     for (int i = 0; i < object->edge_count; i++) {
-        Edge edge = object->edges[i];
-        Vec4 v1 = transformed_vertices[edge.a];
-        Vec4 v2 = transformed_vertices[edge.b];
-        
+        int idxA = object->edges[2*i];
+        int idxB = object->edges[2*i+1];
+        Vec4 v1 = transformed_vertices[idxA];
+        Vec4 v2 = transformed_vertices[idxB];
         int x1 = centerX + (int)v1.x;
         int y1 = centerY + (int)v1.y;
         int x2 = centerX + (int)v2.x;
         int y2 = centerY + (int)v2.y;
-        
         Graphics_DrawLine_Bresenham(canvas, x1, y1, x2, y2, color);
     }
     
     free(transformed_vertices);
+}
+
+// Cohen-Sutherland region codes
+#define INSIDE 0  // 0000
+#define LEFT   1  // 0001
+#define RIGHT  2  // 0010
+#define BOTTOM 4  // 0100
+#define TOP    8  // 1000
+
+// Function to compute region code for a point (x, y)
+static int computeCode(int x, int y, Rect window) {
+    int code = INSIDE; // initialized as being inside
+    
+    if (x < window.xmin)      // to the left of window
+        code |= LEFT;
+    else if (x > window.xmax) // to the right of window
+        code |= RIGHT;
+    
+    if (y < window.ymin)      // below the window
+        code |= BOTTOM;
+    else if (y > window.ymax) // above the window
+        code |= TOP;
+        
+    return code;
+}
+
+// Cohen-Sutherland line clipping algorithm
+// Returns 1 if line is visible (possibly clipped), 0 if completely outside
+int Graphics_ClipLine_CohenSutherland(Line* line, Rect window) {
+    // Compute region codes for both endpoints of the line
+    int code1 = computeCode(line->x1, line->y1, window);
+    int code2 = computeCode(line->x2, line->y2, window);
+    int accept = 0;
+    
+    while (1) {
+        if ((code1 == 0) && (code2 == 0)) {
+            // Both endpoints are inside the window - trivial accept
+            accept = 1;
+            break;
+        } else if (code1 & code2) {
+            // Both endpoints share an outside region - trivial reject
+            break;
+        } else {
+            // Line needs clipping
+            int code_out;
+            int x, y;
+            
+            // At least one endpoint is outside the window, pick it
+            if (code1 != 0)
+                code_out = code1;
+            else
+                code_out = code2;
+                
+            // Find intersection point using formulas:
+            // y = y1 + slope * (x - x1), x = x1 + (1/slope) * (y - y1)
+            if (code_out & TOP) {
+                // Point is above the clip window
+                x = line->x1 + (line->x2 - line->x1) * (window.ymax - line->y1) / (line->y2 - line->y1);
+                y = window.ymax;
+            } else if (code_out & BOTTOM) {
+                // Point is below the clip window
+                x = line->x1 + (line->x2 - line->x1) * (window.ymin - line->y1) / (line->y2 - line->y1);
+                y = window.ymin;
+            } else if (code_out & RIGHT) {
+                // Point is to the right of clip window
+                y = line->y1 + (line->y2 - line->y1) * (window.xmax - line->x1) / (line->x2 - line->x1);
+                x = window.xmax;
+            } else if (code_out & LEFT) {
+                // Point is to the left of clip window
+                y = line->y1 + (line->y2 - line->y1) * (window.xmin - line->x1) / (line->x2 - line->x1);
+                x = window.xmin;
+            }
+            
+            // Replace the outside point with intersection point
+            if (code_out == code1) {
+                line->x1 = x;
+                line->y1 = y;
+                code1 = computeCode(line->x1, line->y1, window);
+            } else {
+                line->x2 = x;
+                line->y2 = y;
+                code2 = computeCode(line->x2, line->y2, window);
+            }
+        }
+    }
+    
+    return accept;
+}
+
+// Simple line drawing function (using Bresenham algorithm)
+void Graphics_DrawLine_Simple(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color) {
+    Graphics_DrawLine_Bresenham(canvas, x1, y1, x2, y2, color);
+}
+
+// Draw rectangle outline
+void Graphics_DrawRect(Canvas* canvas, Rect rect, uint32_t color) {
+    // Draw four sides of the rectangle
+    Graphics_DrawLine_Simple(canvas, rect.xmin, rect.ymin, rect.xmax, rect.ymin, color); // Bottom
+    Graphics_DrawLine_Simple(canvas, rect.xmax, rect.ymin, rect.xmax, rect.ymax, color); // Right
+    Graphics_DrawLine_Simple(canvas, rect.xmax, rect.ymax, rect.xmin, rect.ymax, color); // Top
+    Graphics_DrawLine_Simple(canvas, rect.xmin, rect.ymax, rect.xmin, rect.ymin, color); // Left
 }

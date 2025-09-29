@@ -11,6 +11,104 @@
 #include "ui.h"
 #include "graphics.h"
 
+// Interaction modes for Cohen-Sutherland clipping
+typedef enum {
+    MODE_NONE,
+    MODE_DEFINING_WINDOW,
+    MODE_DEFINING_LINE
+} InteractionMode;
+
+// Global variables for clipping interaction
+static InteractionMode g_currentMode = MODE_NONE;
+static Rect g_clipWindow;
+static int g_windowClickCount = 0;
+static int g_isDefiningLine = 0;
+static int g_lineStartX = 0, g_lineStartY = 0;
+
+// Forward declarations
+void StartWindowDefinition();
+
+// Function to be called from UI to start clipping mode
+void UI_StartClippingMode(void) {
+    StartWindowDefinition();
+}
+
+// Function to start window definition mode
+void StartWindowDefinition() {
+    g_currentMode = MODE_DEFINING_WINDOW;
+    g_windowClickCount = 0;
+    printf("Mode: Defining clipping window - click two opposite corners\n");
+}
+
+// Function to handle window definition clicks
+void HandleWindowDefinition(Canvas* canvas, int x, int y) {
+    if (g_windowClickCount == 0) {
+        // First click - store the starting corner
+        g_clipWindow.xmin = x;
+        g_clipWindow.ymin = y;
+        g_windowClickCount = 1;
+        printf("First corner selected: (%d, %d)\n", x, y);
+    } else if (g_windowClickCount == 1) {
+        // Second click - complete the window definition
+        g_clipWindow.xmax = x;
+        g_clipWindow.ymax = y;
+        
+        // Ensure min/max are correct
+        if (g_clipWindow.xmin > g_clipWindow.xmax) {
+            int temp = g_clipWindow.xmin;
+            g_clipWindow.xmin = g_clipWindow.xmax;
+            g_clipWindow.xmax = temp;
+        }
+        if (g_clipWindow.ymin > g_clipWindow.ymax) {
+            int temp = g_clipWindow.ymin;
+            g_clipWindow.ymin = g_clipWindow.ymax;
+            g_clipWindow.ymax = temp;
+        }
+        
+        // Draw the clipping window
+        Graphics_DrawRect(canvas, g_clipWindow, 0xFF00FF00); // Green rectangle
+        
+        // Switch to line definition mode
+        g_currentMode = MODE_DEFINING_LINE;
+        printf("Window defined: (%d,%d) to (%d,%d). Now draw a line to clip.\n", 
+               g_clipWindow.xmin, g_clipWindow.ymin, g_clipWindow.xmax, g_clipWindow.ymax);
+    }
+}
+
+// Function to handle line definition
+void HandleLineDefinition(Canvas* canvas, int x, int y, int mouseDown) {
+    if (mouseDown && !g_isDefiningLine) {
+        // Start defining line
+        g_isDefiningLine = 1;
+        g_lineStartX = x;
+        g_lineStartY = y;
+    } else if (!mouseDown && g_isDefiningLine) {
+        // Finish defining line and apply clipping
+        g_isDefiningLine = 0;
+        
+        Line line = {g_lineStartX, g_lineStartY, x, y};
+        
+        // Draw original line in red
+        Graphics_DrawLine_Simple(canvas, line.x1, line.y1, line.x2, line.y2, 0xFF0000FF);
+        
+        // Apply Cohen-Sutherland clipping
+        Line clippedLine = line; // Make a copy
+        if (Graphics_ClipLine_CohenSutherland(&clippedLine, g_clipWindow)) {
+            // Draw clipped line in white/yellow
+            Graphics_DrawLine_Simple(canvas, clippedLine.x1, clippedLine.y1, 
+                                   clippedLine.x2, clippedLine.y2, 0xFFFFFF00);
+            printf("Line clipped from (%d,%d)-(%d,%d) to (%d,%d)-(%d,%d)\n",
+                   line.x1, line.y1, line.x2, line.y2,
+                   clippedLine.x1, clippedLine.y1, clippedLine.x2, clippedLine.y2);
+        } else {
+            printf("Line completely outside clipping window\n");
+        }
+        
+        // Reset mode
+        g_currentMode = MODE_NONE;
+    }
+}
+
 int main(int, char**) {
     // --- 1. Inicialização do SDL ---
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
@@ -78,7 +176,7 @@ int main(int, char**) {
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
             
-            // Handle mouse clicks for line drawing
+            // Handle mouse clicks for line drawing and clipping
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 ImGuiIO& io = ImGui::GetIO();
                 if (!io.WantCaptureMouse) {
@@ -88,28 +186,38 @@ int main(int, char**) {
                     int canvasY = mouseY - 50;
                     
                     if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
-                        if (waitingForFirstClick) {
-                            firstClickX = canvasX;
-                            firstClickY = canvasY;
-                            waitingForFirstClick = false;
-                        } else {
-                            int algorithm = UI_GetSelectedLineAlgorithm();
-                            uint32_t color = 0xFF000000;
-                            
-                            switch (algorithm) {
-                                case 0:
-                                    Graphics_DrawLine_GeneralEquation(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
-                                    break;
-                                case 1:
-                                    Graphics_DrawLine_Parametric(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
-                                    break;
-                                case 2:
-                                    Graphics_DrawLine_Bresenham(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
-                                    break;
-                            }
-                            
+                        // Handle clipping modes first
+                        if (g_currentMode == MODE_DEFINING_WINDOW) {
+                            HandleWindowDefinition(canvas, canvasX, canvasY);
                             UI_TriggerTextureUpdate();
-                            waitingForFirstClick = true;
+                        } else if (g_currentMode == MODE_DEFINING_LINE) {
+                            HandleLineDefinition(canvas, canvasX, canvasY, 1); // mouseDown = 1
+                            UI_TriggerTextureUpdate();
+                        } else {
+                            // Normal line drawing mode
+                            if (waitingForFirstClick) {
+                                firstClickX = canvasX;
+                                firstClickY = canvasY;
+                                waitingForFirstClick = false;
+                            } else {
+                                int algorithm = UI_GetSelectedLineAlgorithm();
+                                uint32_t color = 0xFF000000;
+                                
+                                switch (algorithm) {
+                                    case 0:
+                                        Graphics_DrawLine_GeneralEquation(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                        break;
+                                    case 1:
+                                        Graphics_DrawLine_Parametric(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                        break;
+                                    case 2:
+                                        Graphics_DrawLine_Bresenham(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                        break;
+                                }
+                                
+                                UI_TriggerTextureUpdate();
+                                waitingForFirstClick = true;
+                            }
                         }
                     }
                 }
@@ -170,6 +278,24 @@ int main(int, char**) {
                         }
                     }
                     drawingCircle = false;
+                }
+            }
+            
+            // Handle mouse button up for line definition in clipping mode
+            if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT) {
+                if (g_currentMode == MODE_DEFINING_LINE) {
+                    ImGuiIO& io = ImGui::GetIO();
+                    if (!io.WantCaptureMouse) {
+                        int mouseX = event.button.x;
+                        int mouseY = event.button.y;
+                        int canvasX = mouseX - 50;
+                        int canvasY = mouseY - 50;
+                        
+                        if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
+                            HandleLineDefinition(canvas, canvasX, canvasY, 0); // mouseDown = 0
+                            UI_TriggerTextureUpdate();
+                        }
+                    }
                 }
             }
         }

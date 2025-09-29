@@ -297,6 +297,17 @@ void UI_Render(void) {
         }
     }
     
+    ImGui::Separator();
+    
+    // Cohen-Sutherland Line Clipping
+    ImGui::Text("Recorte de Linhas (Cohen-Sutherland):");
+    if (ImGui::Button("Definir Janela de Recorte")) {
+        UI_StartClippingMode();
+    }
+    ImGui::TextWrapped("1. Clique no botão acima");
+    ImGui::TextWrapped("2. Clique em dois cantos opostos para definir a janela");
+    ImGui::TextWrapped("3. Arraste para desenhar uma linha que será recortada");
+    
     ImGui::End();
     
     RenderFileDialog();

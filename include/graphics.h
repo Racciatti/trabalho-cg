@@ -20,10 +20,21 @@ typedef struct {
 
 typedef struct {
     Vec3* vertices;
+    int* edges; // Each edge is a pair of vertex indices: [a0, b0, a1, b1, ...]
     int vertex_count;
-    Edge* edges;
-    int edge_count;
+    int edge_count; // Number of edges (edges array has 2*edge_count ints)
 } Object3D;
+
+// Structures for Cohen-Sutherland clipping
+typedef struct {
+    int x1, y1;  // Start point
+    int x2, y2;  // End point
+} Line;
+
+typedef struct {
+    int xmin, ymin;  // Bottom-left corner
+    int xmax, ymax;  // Top-right corner
+} Rect;
 
 void Graphics_ApplyGrayscale(Canvas* canvas);
 void Graphics_ApplyNegative(Canvas* canvas);
@@ -44,6 +55,11 @@ void Graphics_Translate3D(Object3D* object, float tx, float ty, float tz);
 void Graphics_Scale3D(Object3D* object, float sx, float sy, float sz);
 void Graphics_Rotate3D(Object3D* object, float angle, int axis);
 void Graphics_RenderObject3D(Canvas* canvas, Object3D* object, Matrix4x4 transform, uint32_t color);
+
+// Cohen-Sutherland line clipping
+int Graphics_ClipLine_CohenSutherland(Line* line, Rect window);
+void Graphics_DrawLine_Simple(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color);
+void Graphics_DrawRect(Canvas* canvas, Rect rect, uint32_t color);
 
 #ifdef __cplusplus
 }
