@@ -1634,6 +1634,29 @@ CMakeFiles/seu_executavel.dir/src/canvas.c.o: /home/racciatti/Desktop/Code/traba
   /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/syslimits.h \
   /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/xmmintrin.h
 
+CMakeFiles/seu_executavel.dir/src/graphics.c.o: /home/racciatti/Desktop/Code/trabalho-cg/src/graphics.c \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/canvas.h \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/graphics.h \
+  /usr/include/features-time64.h \
+  /usr/include/features.h \
+  /usr/include/stdc-predef.h \
+  /usr/include/stdint.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/timesize.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+  /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/stdint.h
+
 CMakeFiles/seu_executavel.dir/src/main.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/src/main.cpp \
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdl2.h \
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdlrenderer2.h \
@@ -1925,22 +1948,38 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /home/racciatti/Desktop/Code/trabalho-cg/include/graphics.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/ui.h \
   /usr/include/assert.h \
+  /usr/include/c++/14.3.0/cstdio \
+  /usr/include/c++/14.3.0/pstl/pstl_config.h \
+  /usr/include/c++/14.3.0/x86_64-unknown-linux-gnu/bits/c++config.h \
+  /usr/include/c++/14.3.0/x86_64-unknown-linux-gnu/bits/cpu_defines.h \
+  /usr/include/c++/14.3.0/x86_64-unknown-linux-gnu/bits/os_defines.h \
   /usr/include/features-time64.h \
   /usr/include/features.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
+  /usr/include/stdio.h \
   /usr/include/string.h \
   /usr/include/strings.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/long-double.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -1982,13 +2021,16 @@ seu_executavel: /lib64/ld-linux-x86-64.so.2 \
   CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o \
   CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o \
   CMakeFiles/seu_executavel.dir/src/canvas.c.o \
+  CMakeFiles/seu_executavel.dir/src/graphics.c.o \
   CMakeFiles/seu_executavel.dir/src/main.cpp.o \
   CMakeFiles/seu_executavel.dir/src/ui.cpp.o
 
 
+CMakeFiles/seu_executavel.dir/src/main.cpp.o:
+
 CMakeFiles/seu_executavel.dir/src/ui.cpp.o:
 
-CMakeFiles/seu_executavel.dir/src/main.cpp.o:
+CMakeFiles/seu_executavel.dir/src/graphics.c.o:
 
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o:
 
@@ -2021,6 +2063,8 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o:
 /usr/lib/x86_64-linux-gnu/Scrt1.o:
 
 /lib64/ld-linux-x86-64.so.2:
+
+/usr/include/c++/14.3.0/cstdio:
 
 /home/racciatti/Desktop/Code/trabalho-cg/src/ui.cpp:
 
@@ -2317,6 +2361,8 @@ CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o:
 /usr/include/c++/14.3.0/bits/utility.h:
 
 /usr/include/SDL2/SDL_loadso.h:
+
+/home/racciatti/Desktop/Code/trabalho-cg/src/graphics.c:
 
 /usr/include/SDL2/SDL_clipboard.h:
 
