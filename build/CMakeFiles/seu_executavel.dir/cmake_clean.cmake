@@ -14,6 +14,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o.d"
   "CMakeFiles/seu_executavel.dir/src/canvas.c.o"
   "CMakeFiles/seu_executavel.dir/src/canvas.c.o.d"
+  "CMakeFiles/seu_executavel.dir/src/graphics.c.o"
+  "CMakeFiles/seu_executavel.dir/src/graphics.c.o.d"
   "CMakeFiles/seu_executavel.dir/src/main.cpp.o"
   "CMakeFiles/seu_executavel.dir/src/main.cpp.o.d"
   "CMakeFiles/seu_executavel.dir/src/ui.cpp.o"

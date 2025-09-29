@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/home/racciatti/Desktop/Code/trabalho-cg/include -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends -isystem /usr/include/SDL2
+C_INCLUDES = -I/home/racciatti/Desktop/Code/trabalho-cg/include -I/home/racciatti/Desktop/Code/trabalho-cg/deps -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends -isystem /usr/include/SDL2
 
 C_FLAGS = -std=gnu11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/racciatti/Desktop/Code/trabalho-cg/include -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends -isystem /usr/include/SDL2
+CXX_INCLUDES = -I/home/racciatti/Desktop/Code/trabalho-cg/include -I/home/racciatti/Desktop/Code/trabalho-cg/deps -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui -I/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends -isystem /usr/include/SDL2
 
 CXX_FLAGS = -std=gnu++17
 

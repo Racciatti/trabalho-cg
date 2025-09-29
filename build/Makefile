@@ -297,6 +297,30 @@ src/canvas.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/canvas.c.s
 .PHONY : src/canvas.c.s
 
+src/graphics.o: src/graphics.c.o
+.PHONY : src/graphics.o
+
+# target to build an object file
+src/graphics.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/graphics.c.o
+.PHONY : src/graphics.c.o
+
+src/graphics.i: src/graphics.c.i
+.PHONY : src/graphics.i
+
+# target to preprocess a source file
+src/graphics.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/graphics.c.i
+.PHONY : src/graphics.c.i
+
+src/graphics.s: src/graphics.c.s
+.PHONY : src/graphics.s
+
+# target to generate assembly for a file
+src/graphics.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/graphics.c.s
+.PHONY : src/graphics.c.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -375,6 +399,9 @@ help:
 	@echo "... src/canvas.o"
 	@echo "... src/canvas.i"
 	@echo "... src/canvas.s"
+	@echo "... src/graphics.o"
+	@echo "... src/graphics.i"
+	@echo "... src/graphics.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

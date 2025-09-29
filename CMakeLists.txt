@@ -16,6 +16,7 @@ find_package(SDL2 REQUIRED)
 # Adiciona os diretórios de include para o seu projeto e para o Dear ImGui
 include_directories(
     include
+    deps
     deps/imgui
     deps/imgui/backends
 )
@@ -25,6 +26,7 @@ set(APP_SOURCES
     src/main.cpp
     src/canvas.c
     src/ui.cpp
+    src/graphics.c
 )
 
 # Lista os arquivos de código-fonte necessários do Dear ImGui

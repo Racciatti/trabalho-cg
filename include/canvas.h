@@ -17,6 +17,8 @@ Canvas* Canvas_Create(int width, int height);
 void Canvas_Destroy(Canvas* canvas);
 void Canvas_Clear(Canvas* canvas, uint32_t color);
 void Canvas_SetPixel(Canvas* canvas, int x, int y, uint32_t color);
+uint32_t Canvas_GetPixel(Canvas* canvas, int x, int y);
+int Canvas_LoadImage(Canvas* canvas, const char* filename);
 
 #ifdef __cplusplus
 }
