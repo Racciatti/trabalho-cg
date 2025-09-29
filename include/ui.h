@@ -14,6 +14,7 @@ bool UI_TextureNeedsUpdate(void);
 int UI_GetSelectedLineAlgorithm(void);
 int UI_GetSelectedCircleAlgorithm(void);
 void UI_TriggerTextureUpdate(void);
+void UI_Cleanup(void);
 
 #ifdef __cplusplus
 }

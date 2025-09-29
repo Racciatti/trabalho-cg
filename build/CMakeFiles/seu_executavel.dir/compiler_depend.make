@@ -1637,6 +1637,7 @@ CMakeFiles/seu_executavel.dir/src/canvas.c.o: /home/racciatti/Desktop/Code/traba
 CMakeFiles/seu_executavel.dir/src/graphics.c.o: /home/racciatti/Desktop/Code/trabalho-cg/src/graphics.c \
   /home/racciatti/Desktop/Code/trabalho-cg/include/canvas.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/graphics.h \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/matrix.h \
   /usr/include/alloca.h \
   /usr/include/endian.h \
   /usr/include/features-time64.h \
@@ -1702,6 +1703,7 @@ CMakeFiles/seu_executavel.dir/src/main.cpp.o: /home/racciatti/Desktop/Code/traba
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/canvas.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/graphics.h \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/matrix.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/ui.h \
   /usr/include/SDL2/SDL.h \
   /usr/include/SDL2/SDL_assert.h \
@@ -1985,6 +1987,7 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/canvas.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/graphics.h \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/matrix.h \
   /home/racciatti/Desktop/Code/trabalho-cg/include/ui.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
@@ -2025,6 +2028,7 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /usr/include/c++/14.3.0/bits/range_access.h \
   /usr/include/c++/14.3.0/bits/refwrap.h \
   /usr/include/c++/14.3.0/bits/requires_hosted.h \
+  /usr/include/c++/14.3.0/bits/specfun.h \
   /usr/include/c++/14.3.0/bits/std_abs.h \
   /usr/include/c++/14.3.0/bits/stl_algo.h \
   /usr/include/c++/14.3.0/bits/stl_algobase.h \
@@ -2050,6 +2054,7 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /usr/include/c++/14.3.0/cctype \
   /usr/include/c++/14.3.0/cerrno \
   /usr/include/c++/14.3.0/clocale \
+  /usr/include/c++/14.3.0/cmath \
   /usr/include/c++/14.3.0/concepts \
   /usr/include/c++/14.3.0/cstddef \
   /usr/include/c++/14.3.0/cstdio \
@@ -2063,12 +2068,25 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /usr/include/c++/14.3.0/ext/type_traits.h \
   /usr/include/c++/14.3.0/initializer_list \
   /usr/include/c++/14.3.0/iosfwd \
+  /usr/include/c++/14.3.0/limits \
   /usr/include/c++/14.3.0/new \
   /usr/include/c++/14.3.0/pstl/execution_defs.h \
   /usr/include/c++/14.3.0/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14.3.0/pstl/pstl_config.h \
   /usr/include/c++/14.3.0/string \
   /usr/include/c++/14.3.0/string_view \
+  /usr/include/c++/14.3.0/tr1/bessel_function.tcc \
+  /usr/include/c++/14.3.0/tr1/beta_function.tcc \
+  /usr/include/c++/14.3.0/tr1/ell_integral.tcc \
+  /usr/include/c++/14.3.0/tr1/exp_integral.tcc \
+  /usr/include/c++/14.3.0/tr1/gamma.tcc \
+  /usr/include/c++/14.3.0/tr1/hypergeometric.tcc \
+  /usr/include/c++/14.3.0/tr1/legendre_function.tcc \
+  /usr/include/c++/14.3.0/tr1/modified_bessel_func.tcc \
+  /usr/include/c++/14.3.0/tr1/poly_hermite.tcc \
+  /usr/include/c++/14.3.0/tr1/poly_laguerre.tcc \
+  /usr/include/c++/14.3.0/tr1/riemann_zeta.tcc \
+  /usr/include/c++/14.3.0/tr1/special_function_util.h \
   /usr/include/c++/14.3.0/tuple \
   /usr/include/c++/14.3.0/type_traits \
   /usr/include/c++/14.3.0/vector \
@@ -2090,6 +2108,7 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /usr/include/linux/stddef.h \
   /usr/include/linux/types.h \
   /usr/include/locale.h \
+  /usr/include/math.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
@@ -2111,10 +2130,19 @@ CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalh
   /usr/include/x86_64-linux-gnu/bits/errno.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
   /usr/include/x86_64-linux-gnu/bits/local_lim.h \
   /usr/include/x86_64-linux-gnu/bits/locale.h \
   /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
   /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
@@ -2338,6 +2366,8 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o:
 /home/racciatti/Desktop/Code/trabalho-cg/src/ui.cpp:
 
 /home/racciatti/Desktop/Code/trabalho-cg/src/main.cpp:
+
+/home/racciatti/Desktop/Code/trabalho-cg/include/matrix.h:
 
 /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_widgets.cpp:
 

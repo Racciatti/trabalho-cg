@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "matrix.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
@@ -222,4 +223,160 @@ void Graphics_DrawCircle_Bresenham(Canvas* canvas, int xc, int yc, int r, uint32
         }
         x++;
     }
+}
+
+Object3D* Graphics_CreateCube() {
+    Object3D* cube = malloc(sizeof(Object3D));
+    if (!cube) return NULL;
+    
+    cube->vertex_count = 8;
+    cube->vertices = malloc(8 * sizeof(Vec3));
+    if (!cube->vertices) {
+        free(cube);
+        return NULL;
+    }
+    
+    cube->vertices[0] = Vec3_Create(-50, -50, -50);
+    cube->vertices[1] = Vec3_Create( 50, -50, -50);
+    cube->vertices[2] = Vec3_Create( 50,  50, -50);
+    cube->vertices[3] = Vec3_Create(-50,  50, -50);
+    cube->vertices[4] = Vec3_Create(-50, -50,  50);
+    cube->vertices[5] = Vec3_Create( 50, -50,  50);
+    cube->vertices[6] = Vec3_Create( 50,  50,  50);
+    cube->vertices[7] = Vec3_Create(-50,  50,  50);
+    
+    cube->edge_count = 12;
+    cube->edges = malloc(12 * sizeof(Edge));
+    if (!cube->edges) {
+        free(cube->vertices);
+        free(cube);
+        return NULL;
+    }
+    
+    cube->edges[0] = (Edge){0, 1};
+    cube->edges[1] = (Edge){1, 2};
+    cube->edges[2] = (Edge){2, 3};
+    cube->edges[3] = (Edge){3, 0};
+    cube->edges[4] = (Edge){4, 5};
+    cube->edges[5] = (Edge){5, 6};
+    cube->edges[6] = (Edge){6, 7};
+    cube->edges[7] = (Edge){7, 4};
+    cube->edges[8] = (Edge){0, 4};
+    cube->edges[9] = (Edge){1, 5};
+    cube->edges[10] = (Edge){2, 6};
+    cube->edges[11] = (Edge){3, 7};
+    
+    return cube;
+}
+
+void Graphics_DestroyObject3D(Object3D* object) {
+    if (object) {
+        free(object->vertices);
+        free(object->edges);
+        free(object);
+    }
+}
+
+void Graphics_Translate3D(Object3D* object, float tx, float ty, float tz) {
+    if (!object) return;
+    
+    Matrix4x4 translation = Matrix4x4_Translation(tx, ty, tz);
+    
+    for (int i = 0; i < object->vertex_count; i++) {
+        Vec4 v = Vec4_Create(object->vertices[i].x, object->vertices[i].y, object->vertices[i].z, 1.0f);
+        Vec4 transformed = Matrix4x4_MultiplyVec4(translation, v);
+        object->vertices[i].x = transformed.x;
+        object->vertices[i].y = transformed.y;
+        object->vertices[i].z = transformed.z;
+    }
+}
+
+void Graphics_Scale3D(Object3D* object, float sx, float sy, float sz) {
+    if (!object) return;
+    
+    Vec3 center = Vec3_Create(0, 0, 0);
+    for (int i = 0; i < object->vertex_count; i++) {
+        center.x += object->vertices[i].x;
+        center.y += object->vertices[i].y;
+        center.z += object->vertices[i].z;
+    }
+    center.x /= object->vertex_count;
+    center.y /= object->vertex_count;
+    center.z /= object->vertex_count;
+    
+    Matrix4x4 toOrigin = Matrix4x4_Translation(-center.x, -center.y, -center.z);
+    Matrix4x4 scale = Matrix4x4_Scale(sx, sy, sz);
+    Matrix4x4 fromOrigin = Matrix4x4_Translation(center.x, center.y, center.z);
+    Matrix4x4 transform = Matrix4x4_Multiply(fromOrigin, Matrix4x4_Multiply(scale, toOrigin));
+    
+    for (int i = 0; i < object->vertex_count; i++) {
+        Vec4 v = Vec4_Create(object->vertices[i].x, object->vertices[i].y, object->vertices[i].z, 1.0f);
+        Vec4 transformed = Matrix4x4_MultiplyVec4(transform, v);
+        object->vertices[i].x = transformed.x;
+        object->vertices[i].y = transformed.y;
+        object->vertices[i].z = transformed.z;
+    }
+}
+
+void Graphics_Rotate3D(Object3D* object, float angle, int axis) {
+    if (!object) return;
+    
+    Vec3 center = Vec3_Create(0, 0, 0);
+    for (int i = 0; i < object->vertex_count; i++) {
+        center.x += object->vertices[i].x;
+        center.y += object->vertices[i].y;
+        center.z += object->vertices[i].z;
+    }
+    center.x /= object->vertex_count;
+    center.y /= object->vertex_count;
+    center.z /= object->vertex_count;
+    
+    Matrix4x4 toOrigin = Matrix4x4_Translation(-center.x, -center.y, -center.z);
+    Matrix4x4 rotation;
+    switch (axis) {
+        case 0: rotation = Matrix4x4_RotationX(angle); break;
+        case 1: rotation = Matrix4x4_RotationY(angle); break;
+        case 2: rotation = Matrix4x4_RotationZ(angle); break;
+        default: rotation = Matrix4x4_Identity(); break;
+    }
+    Matrix4x4 fromOrigin = Matrix4x4_Translation(center.x, center.y, center.z);
+    Matrix4x4 transform = Matrix4x4_Multiply(fromOrigin, Matrix4x4_Multiply(rotation, toOrigin));
+    
+    for (int i = 0; i < object->vertex_count; i++) {
+        Vec4 v = Vec4_Create(object->vertices[i].x, object->vertices[i].y, object->vertices[i].z, 1.0f);
+        Vec4 transformed = Matrix4x4_MultiplyVec4(transform, v);
+        object->vertices[i].x = transformed.x;
+        object->vertices[i].y = transformed.y;
+        object->vertices[i].z = transformed.z;
+    }
+}
+
+void Graphics_RenderObject3D(Canvas* canvas, Object3D* object, Matrix4x4 transform, uint32_t color) {
+    if (!canvas || !object) return;
+    
+    Vec4* transformed_vertices = malloc(object->vertex_count * sizeof(Vec4));
+    if (!transformed_vertices) return;
+    
+    for (int i = 0; i < object->vertex_count; i++) {
+        Vec4 v = Vec4_Create(object->vertices[i].x, object->vertices[i].y, object->vertices[i].z, 1.0f);
+        transformed_vertices[i] = Matrix4x4_MultiplyVec4(transform, v);
+    }
+    
+    int centerX = canvas->width / 2;
+    int centerY = canvas->height / 2;
+    
+    for (int i = 0; i < object->edge_count; i++) {
+        Edge edge = object->edges[i];
+        Vec4 v1 = transformed_vertices[edge.a];
+        Vec4 v2 = transformed_vertices[edge.b];
+        
+        int x1 = centerX + (int)v1.x;
+        int y1 = centerY + (int)v1.y;
+        int x2 = centerX + (int)v2.x;
+        int y2 = centerY + (int)v2.y;
+        
+        Graphics_DrawLine_Bresenham(canvas, x1, y1, x2, y2, color);
+    }
+    
+    free(transformed_vertices);
 }

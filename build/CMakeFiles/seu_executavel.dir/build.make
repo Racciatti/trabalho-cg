@@ -128,10 +128,24 @@ CMakeFiles/seu_executavel.dir/src/graphics.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/seu_executavel.dir/src/graphics.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/racciatti/Desktop/Code/trabalho-cg/src/graphics.c -o CMakeFiles/seu_executavel.dir/src/graphics.c.s
 
+CMakeFiles/seu_executavel.dir/src/matrix.c.o: CMakeFiles/seu_executavel.dir/flags.make
+CMakeFiles/seu_executavel.dir/src/matrix.c.o: /home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c
+CMakeFiles/seu_executavel.dir/src/matrix.c.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/seu_executavel.dir/src/matrix.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/src/matrix.c.o -MF CMakeFiles/seu_executavel.dir/src/matrix.c.o.d -o CMakeFiles/seu_executavel.dir/src/matrix.c.o -c /home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c
+
+CMakeFiles/seu_executavel.dir/src/matrix.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/seu_executavel.dir/src/matrix.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c > CMakeFiles/seu_executavel.dir/src/matrix.c.i
+
+CMakeFiles/seu_executavel.dir/src/matrix.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/seu_executavel.dir/src/matrix.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c -o CMakeFiles/seu_executavel.dir/src/matrix.c.s
+
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.i: cmake_force
@@ -145,7 +159,7 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.s: cmake_force
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_draw.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_draw.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.i: cmake_force
@@ -159,7 +173,7 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.s: cmake_force
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_tables.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_tables.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.i: cmake_force
@@ -173,7 +187,7 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.s: cmake_force
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_widgets.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui_widgets.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.i: cmake_force
@@ -187,7 +201,7 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_widgets.cpp.s: cmake_force
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdl2.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdl2.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.i: cmake_force
@@ -201,7 +215,7 @@ CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.s: cmake_f
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: CMakeFiles/seu_executavel.dir/flags.make
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: CMakeFiles/seu_executavel.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -MF CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o.d -o CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -c /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp
 
 CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.i: cmake_force
@@ -218,6 +232,7 @@ seu_executavel_OBJECTS = \
 "CMakeFiles/seu_executavel.dir/src/canvas.c.o" \
 "CMakeFiles/seu_executavel.dir/src/ui.cpp.o" \
 "CMakeFiles/seu_executavel.dir/src/graphics.c.o" \
+"CMakeFiles/seu_executavel.dir/src/matrix.c.o" \
 "CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o" \
 "CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o" \
 "CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o" \
@@ -232,6 +247,7 @@ seu_executavel: CMakeFiles/seu_executavel.dir/src/main.cpp.o
 seu_executavel: CMakeFiles/seu_executavel.dir/src/canvas.c.o
 seu_executavel: CMakeFiles/seu_executavel.dir/src/ui.cpp.o
 seu_executavel: CMakeFiles/seu_executavel.dir/src/graphics.c.o
+seu_executavel: CMakeFiles/seu_executavel.dir/src/matrix.c.o
 seu_executavel: CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o
 seu_executavel: CMakeFiles/seu_executavel.dir/deps/imgui/imgui_draw.cpp.o
 seu_executavel: CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o
@@ -242,7 +258,7 @@ seu_executavel: CMakeFiles/seu_executavel.dir/build.make
 seu_executavel: CMakeFiles/seu_executavel.dir/compiler_depend.ts
 seu_executavel: /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.3200.10
 seu_executavel: CMakeFiles/seu_executavel.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable seu_executavel"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable seu_executavel"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/seu_executavel.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

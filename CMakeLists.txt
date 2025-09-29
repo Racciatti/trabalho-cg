@@ -27,6 +27,7 @@ set(APP_SOURCES
     src/canvas.c
     src/ui.cpp
     src/graphics.c
+    src/matrix.c
 )
 
 # Lista os arquivos de código-fonte necessários do Dear ImGui

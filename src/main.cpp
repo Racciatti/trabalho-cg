@@ -234,6 +234,8 @@ int main(int, char**) {
     SDL_DestroyTexture(canvasTexture);
     Canvas_Destroy(canvas);
     
+    UI_Cleanup();
+    
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

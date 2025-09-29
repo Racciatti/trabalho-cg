@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/racciatti/Desktop/Code/trabalho-cg/src/canvas.c" "CMakeFiles/seu_executavel.dir/src/canvas.c.o" "gcc" "CMakeFiles/seu_executavel.dir/src/canvas.c.o.d"
   "/home/racciatti/Desktop/Code/trabalho-cg/src/graphics.c" "CMakeFiles/seu_executavel.dir/src/graphics.c.o" "gcc" "CMakeFiles/seu_executavel.dir/src/graphics.c.o.d"
+  "/home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c" "CMakeFiles/seu_executavel.dir/src/matrix.c.o" "gcc" "CMakeFiles/seu_executavel.dir/src/matrix.c.o.d"
   "/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdl2.cpp" "CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o" "gcc" "CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdl2.cpp.o.d"
   "/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp" "CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o" "gcc" "CMakeFiles/seu_executavel.dir/deps/imgui/backends/imgui_impl_sdlrenderer2.cpp.o.d"
   "/home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.cpp" "CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o" "gcc" "CMakeFiles/seu_executavel.dir/deps/imgui/imgui.cpp.o.d"

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <vector>
 #include <string>
+#include <cmath>
 #include <algorithm>
 
 static Canvas* g_canvas = nullptr;
@@ -19,6 +20,11 @@ static bool g_showFileDialog = false;
 static bool g_textureNeedsUpdate = false;
 static int g_selectedLineAlgorithm = 0;
 static int g_selectedCircleAlgorithm = 0;
+static float g_translate[3] = {0.0f, 0.0f, 0.0f};
+static float g_scale[3] = {1.0f, 1.0f, 1.0f};
+static int g_rotationAxis = 0;
+static float g_rotationAngle = 0.0f;
+static Object3D* g_object3D = nullptr;
 static std::vector<std::string> g_fileList;
 static std::vector<std::string> g_dirList;
 
@@ -224,7 +230,81 @@ void UI_Render(void) {
     ImGui::Text("Inspetor de Pixels:");
     ImGui::Text("%s", g_pixelInfo);
     
+    ImGui::Separator();
+    
+    // 3D Transformations
+    ImGui::Text("Transformações 3D:");
+    
+    // Translation controls
+    ImGui::Text("Translação:");
+    ImGui::SliderFloat("Tx", &g_translate[0], -200.0f, 200.0f);
+    ImGui::SliderFloat("Ty", &g_translate[1], -200.0f, 200.0f);
+    ImGui::SliderFloat("Tz", &g_translate[2], -200.0f, 200.0f);
+    
+    // Scale controls
+    ImGui::Text("Escala:");
+    ImGui::SliderFloat("Sx", &g_scale[0], 0.1f, 3.0f);
+    ImGui::SliderFloat("Sy", &g_scale[1], 0.1f, 3.0f);
+    ImGui::SliderFloat("Sz", &g_scale[2], 0.1f, 3.0f);
+    
+    // Rotation controls
+    ImGui::Text("Rotação:");
+    ImGui::RadioButton("Eixo X", &g_rotationAxis, 0);
+    ImGui::SameLine();
+    ImGui::RadioButton("Eixo Y", &g_rotationAxis, 1);
+    ImGui::SameLine();
+    ImGui::RadioButton("Eixo Z", &g_rotationAxis, 2);
+    ImGui::SliderFloat("Ângulo", &g_rotationAngle, 0.0f, 360.0f);
+    
+    // Apply transformation button
+    if (ImGui::Button("Aplicar Transformação")) {
+        if (g_object3D == nullptr) {
+            // Create cube if it doesn't exist
+            g_object3D = Graphics_CreateCube();
+        }
+        
+        // Clear canvas
+        if (g_canvas) {
+            Canvas_Clear(g_canvas, 0xFF000000); // Clear to black
+        }
+        
+        // Create transformation matrix
+        Matrix4x4 transform = Matrix4x4_Identity();
+        
+        // Apply translation
+        Matrix4x4 translation = Matrix4x4_Translation(g_translate[0], g_translate[1], g_translate[2]);
+        transform = Matrix4x4_Multiply(transform, translation);
+        
+        // Apply scale
+        Matrix4x4 scale = Matrix4x4_Scale(g_scale[0], g_scale[1], g_scale[2]);
+        transform = Matrix4x4_Multiply(transform, scale);
+        
+        // Apply rotation
+        Matrix4x4 rotation = Matrix4x4_Identity();
+        if (g_rotationAxis == 0) {
+            rotation = Matrix4x4_RotationX(g_rotationAngle * M_PI / 180.0f);
+        } else if (g_rotationAxis == 1) {
+            rotation = Matrix4x4_RotationY(g_rotationAngle * M_PI / 180.0f);
+        } else {
+            rotation = Matrix4x4_RotationZ(g_rotationAngle * M_PI / 180.0f);
+        }
+        transform = Matrix4x4_Multiply(transform, rotation);
+        
+        // Render object
+        if (g_canvas) {
+            Graphics_RenderObject3D(g_canvas, g_object3D, transform, 0xFFFFFFFF);
+            g_textureNeedsUpdate = true;
+        }
+    }
+    
     ImGui::End();
     
     RenderFileDialog();
+}
+
+void UI_Cleanup(void) {
+    if (g_object3D != nullptr) {
+        Graphics_DestroyObject3D(g_object3D);
+        g_object3D = nullptr;
+    }
 }

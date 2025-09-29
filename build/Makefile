@@ -345,6 +345,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/matrix.o: src/matrix.c.o
+.PHONY : src/matrix.o
+
+# target to build an object file
+src/matrix.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/matrix.c.o
+.PHONY : src/matrix.c.o
+
+src/matrix.i: src/matrix.c.i
+.PHONY : src/matrix.i
+
+# target to preprocess a source file
+src/matrix.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/matrix.c.i
+.PHONY : src/matrix.c.i
+
+src/matrix.s: src/matrix.c.s
+.PHONY : src/matrix.s
+
+# target to generate assembly for a file
+src/matrix.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seu_executavel.dir/build.make CMakeFiles/seu_executavel.dir/src/matrix.c.s
+.PHONY : src/matrix.c.s
+
 src/ui.o: src/ui.cpp.o
 .PHONY : src/ui.o
 
@@ -405,6 +429,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/matrix.o"
+	@echo "... src/matrix.i"
+	@echo "... src/matrix.s"
 	@echo "... src/ui.o"
 	@echo "... src/ui.i"
 	@echo "... src/ui.s"
