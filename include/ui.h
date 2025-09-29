@@ -10,6 +10,7 @@ extern "C" {
 void UI_Render(void);
 void UI_SetCanvas(Canvas* canvas);
 void UI_SetPixelInfo(const char* info);
+bool UI_TextureNeedsUpdate(void);
 
 #ifdef __cplusplus
 }

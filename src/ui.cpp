@@ -16,6 +16,7 @@ static char g_imagePath[256] = "";
 static char g_statusMessage[256] = "";
 static char g_currentDir[512] = ".";
 static bool g_showFileDialog = false;
+static bool g_textureNeedsUpdate = false;
 static std::vector<std::string> g_fileList;
 static std::vector<std::string> g_dirList;
 
@@ -25,6 +26,12 @@ void UI_SetCanvas(Canvas* canvas) {
 
 void UI_SetPixelInfo(const char* info) {
     snprintf(g_pixelInfo, sizeof(g_pixelInfo), "%s", info);
+}
+
+bool UI_TextureNeedsUpdate() {
+    bool needsUpdate = g_textureNeedsUpdate;
+    g_textureNeedsUpdate = false;
+    return needsUpdate;
 }
 
 static void ScanDirectory(const char* path) {
@@ -129,6 +136,7 @@ void UI_Render(void) {
             if (g_canvas) {
                 if (Canvas_LoadImage(g_canvas, g_imagePath)) {
                     snprintf(g_statusMessage, sizeof(g_statusMessage), "Imagem carregada com sucesso!");
+                    g_textureNeedsUpdate = true;
                 } else {
                     snprintf(g_statusMessage, sizeof(g_statusMessage), "Erro ao carregar a imagem");
                 }
@@ -145,12 +153,14 @@ void UI_Render(void) {
     if (ImGui::Button("Tons de Cinza")) {
         if (g_canvas) {
             Graphics_ApplyGrayscale(g_canvas);
+            g_textureNeedsUpdate = true;
         }
     }
     
     if (ImGui::Button("Negativo")) {
         if (g_canvas) {
             Graphics_ApplyNegative(g_canvas);
+            g_textureNeedsUpdate = true;
         }
     }
     
@@ -159,18 +169,21 @@ void UI_Render(void) {
     if (ImGui::Button("Canal R")) {
         if (g_canvas) {
             Graphics_ApplyChannel(g_canvas, CHANNEL_R);
+            g_textureNeedsUpdate = true;
         }
     }
     
     if (ImGui::Button("Canal G")) {
         if (g_canvas) {
             Graphics_ApplyChannel(g_canvas, CHANNEL_G);
+            g_textureNeedsUpdate = true;
         }
     }
     
     if (ImGui::Button("Canal B")) {
         if (g_canvas) {
             Graphics_ApplyChannel(g_canvas, CHANNEL_B);
+            g_textureNeedsUpdate = true;
         }
     }
     

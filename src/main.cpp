@@ -52,6 +52,9 @@ int main(int, char**) {
     SDL_Texture* canvasTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                                                    SDL_TEXTUREACCESS_STREAMING,
                                                    canvas->width, canvas->height);
+    
+    // Initial texture update to show the blank canvas
+    SDL_UpdateTexture(canvasTexture, NULL, canvas->pixels, canvas->width * sizeof(uint32_t));
 
     // --- 4. Loop Principal da Aplicação ---
     bool done = false;
@@ -100,7 +103,20 @@ int main(int, char**) {
         SDL_RenderClear(renderer);
 
         // --- Renderização do Canvas ---
-        SDL_UpdateTexture(canvasTexture, NULL, canvas->pixels, canvas->width * sizeof(uint32_t));
+        if (UI_TextureNeedsUpdate()) {
+            // Recreate texture if dimensions changed
+            int currentWidth, currentHeight;
+            SDL_QueryTexture(canvasTexture, NULL, NULL, &currentWidth, &currentHeight);
+            
+            if (currentWidth != canvas->width || currentHeight != canvas->height) {
+                SDL_DestroyTexture(canvasTexture);
+                canvasTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+                                                 SDL_TEXTUREACCESS_STREAMING,
+                                                 canvas->width, canvas->height);
+            }
+            
+            SDL_UpdateTexture(canvasTexture, NULL, canvas->pixels, canvas->width * sizeof(uint32_t));
+        }
         SDL_Rect canvasRect = {50, 50, canvas->width, canvas->height};
         SDL_RenderCopy(renderer, canvasTexture, NULL, &canvasRect);
 
