@@ -1,33 +1,40 @@
-cmake_minimum_required(VERSION 3.16)
-project(trabalho-cg)
+# Versão mínima do CMake
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_C_STANDARD 99)
+# Nome do projeto. IMPORTANTE: Adicionado CXX para compilar os arquivos .cpp do Dear ImGui
+project(ProjetoCG C CXX)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SDL2 REQUIRED sdl2)
-pkg_check_modules(SDL2_RENDERER REQUIRED SDL2_gfx)
+# Define os padrões das linguagens
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/imgui)
+# Encontra o pacote SDL2
+find_package(SDL2 REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${IMGUI_DIR})
-include_directories(${IMGUI_DIR}/backends)
-
-file(GLOB IMGUI_SOURCES
-    ${IMGUI_DIR}/*.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_sdl2.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_sdlrenderer2.cpp
+# Adiciona os diretórios de include para o seu projeto e para o Dear ImGui
+include_directories(
+    include
+    deps/imgui                # Para encontrar "imgui.h"
+    deps/imgui/backends       # Para encontrar os arquivos de integração
 )
 
-set(SOURCES
-    src/main.c
-    src/canvas.c
-    src/ui.c
-    ${IMGUI_SOURCES}
+# Encontra os arquivos de código-fonte da sua aplicação
+file(GLOB APP_SOURCES "src/*.c")
+
+# Lista os arquivos de código-fonte necessários do Dear ImGui
+set(IMGUI_SOURCES
+    deps/imgui/imgui.cpp
+    deps/imgui/imgui_draw.cpp
+    deps/imgui/imgui_tables.cpp
+    deps/imgui/imgui_widgets.cpp
+    deps/imgui/backends/imgui_impl_sdl2.cpp
+    deps/imgui/backends/imgui_impl_sdlrenderer2.cpp # Use este se estiver usando SDL_Renderer
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+# Cria o executável com os SEUS fontes E os fontes do ImGui
+add_executable(seu_executavel ${APP_SOURCES} ${IMGUI_SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_compile_options(${PROJECT_NAME} PRIVATE ${SDL2_CFLAGS_OTHER})
+# Vincula apenas a biblioteca SDL2. O código do ImGui já está compilado no executável.
+target_link_libraries(seu_executavel PRIVATE SDL2::SDL2)
