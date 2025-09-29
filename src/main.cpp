@@ -103,15 +103,15 @@ void HandleLineDefinition(Canvas* canvas, int x, int y, int mouseDown) {
         
         Line line = {g_lineStartX, g_lineStartY, x, y};
         
-        // Draw original line in red (outside viewport)
-        Graphics_DrawLine_Simple(canvas, line.x1, line.y1, line.x2, line.y2, 0xFF0000FF);
+        // Draw original line in black (outside viewport)
+        Graphics_DrawLine_Simple(canvas, line.x1, line.y1, line.x2, line.y2, 0xFF000000);
         
         // Apply Cohen-Sutherland clipping
         Line clippedLine = line; // Make a copy
         if (Graphics_ClipLine_CohenSutherland(&clippedLine, g_clipWindow)) {
-            // Draw clipped line in green (inside viewport)
+            // Draw clipped line in red (inside viewport)
             Graphics_DrawLine_Simple(canvas, clippedLine.x1, clippedLine.y1, 
-                                   clippedLine.x2, clippedLine.y2, 0xFF00FF00);
+                                   clippedLine.x2, clippedLine.y2, 0xFFFF0000);
             printf("Line clipped from (%d,%d)-(%d,%d) to (%d,%d)-(%d,%d)\n",
                    line.x1, line.y1, line.x2, line.y2,
                    clippedLine.x1, clippedLine.y1, clippedLine.x2, clippedLine.y2);
@@ -255,6 +255,7 @@ int main(int, char**) {
                                 Color targetColor = Graphics_Uint32ToColor(targetColorUint);
                                 Color fillColor = {255, 0, 0, 255};
                                 int connectivity = (fillAlgorithm == 0) ? 4 : 8;
+
                                 Graphics_Fill_FloodFill(canvas, canvasX, canvasY, targetColor, fillColor, connectivity);
                                 UI_TriggerTextureUpdate();
                             }

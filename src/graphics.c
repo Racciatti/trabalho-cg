@@ -550,10 +550,8 @@ void Graphics_Fill_FloodFill(Canvas* canvas, int x, int y, Color targetColor, Co
     
     uint32_t targetColorUint = Graphics_ColorToUint32(targetColor);
     uint32_t replacementColorUint = Graphics_ColorToUint32(replacementColor);
-    uint32_t currentPixel = Canvas_GetPixel(canvas, x, y);
-    
+    uint32_t currentPixel = Canvas_GetPixel(canvas, x, y);connectivity=4;
     if (currentPixel != targetColorUint || targetColorUint == replacementColorUint) return;
-    
     int maxStackSize = canvas->width * canvas->height;
     FloodFillPoint* stack = malloc(maxStackSize * sizeof(FloodFillPoint));
     if (!stack) return;

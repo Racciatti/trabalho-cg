@@ -147,14 +147,14 @@ static void RenderFileDialog() {
 }
 
 void UI_Render(void) {
-    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(900, 600), ImGuiCond_FirstUseEver);
     ImGui::Begin("Painel de Controle");
     
     // Make the window scrollable
     if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
     
     // Left Column
-    if (ImGui::BeginChild("LeftColumn", ImVec2(200, 0), true)) {
+    if (ImGui::BeginChild("LeftColumn", ImVec2(400, 0), true)) {
         ImGui::Text("Carregamento de Imagem:");
     
     if (ImGui::Button("Selecionar Imagem...")) {
@@ -243,13 +243,23 @@ void UI_Render(void) {
     ImGui::Text("Inspetor de Pixels:");
     ImGui::Text("%s", g_pixelInfo);
     
+    ImGui::Separator();
+    
+    // Clear canvas button
+    if (ImGui::Button("LIMPAR")) {
+        if (g_canvas) {
+            Canvas_Clear(g_canvas, 0xFFFFFFFF); // Clear to white
+            g_textureNeedsUpdate = true;
+        }
+    }
+    
     }
     ImGui::EndChild();
     
     ImGui::SameLine();
     
     // Right Column
-    if (ImGui::BeginChild("RightColumn", ImVec2(240, 0), true)) {
+    if (ImGui::BeginChild("RightColumn", ImVec2(480, 0), true)) {
         ImGui::Text("Transformações 3D:");
     
     // Translation controls
