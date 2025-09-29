@@ -2,6 +2,7 @@
 #define UI_H
 
 #include "canvas.h"
+#include "graphics.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,6 +17,10 @@ int UI_GetSelectedCircleAlgorithm(void);
 void UI_TriggerTextureUpdate(void);
 void UI_Cleanup(void);
 void UI_StartClippingMode(void);
+void UI_StartPolygonDrawing(void);
+int UI_GetSelectedFillAlgorithm(void);
+void UI_FillPolygonScanline(void);
+void UI_SetCurrentPolygon(Polygon* poly);
 
 #ifdef __cplusplus
 }

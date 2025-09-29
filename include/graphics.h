@@ -36,6 +36,20 @@ typedef struct {
     int xmax, ymax;  // Top-right corner
 } Rect;
 
+typedef struct {
+    uint8_t r, g, b, a;
+} Color;
+
+typedef struct {
+    int x, y;
+} Point;
+
+typedef struct {
+    Point* vertices;
+    int vertex_count;
+    int capacity;
+} Polygon;
+
 void Graphics_ApplyGrayscale(Canvas* canvas);
 void Graphics_ApplyNegative(Canvas* canvas);
 void Graphics_ApplyChannel(Canvas* canvas, Channel c);
@@ -60,6 +74,15 @@ void Graphics_RenderObject3D(Canvas* canvas, Object3D* object, Matrix4x4 transfo
 int Graphics_ClipLine_CohenSutherland(Line* line, Rect window);
 void Graphics_DrawLine_Simple(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color);
 void Graphics_DrawRect(Canvas* canvas, Rect rect, uint32_t color);
+
+Polygon* Graphics_CreatePolygon(int capacity);
+void Graphics_DestroyPolygon(Polygon* poly);
+void Graphics_AddVertexToPolygon(Polygon* poly, int x, int y);
+void Graphics_DrawPolygon(Canvas* canvas, Polygon* poly, uint32_t color);
+void Graphics_Fill_FloodFill(Canvas* canvas, int x, int y, Color targetColor, Color replacementColor, int connectivity);
+void Graphics_Fill_Scanline(Canvas* canvas, Polygon* poly, Color color);
+uint32_t Graphics_ColorToUint32(Color color);
+Color Graphics_Uint32ToColor(uint32_t color);
 
 #ifdef __cplusplus
 }

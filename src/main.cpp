@@ -15,7 +15,9 @@
 typedef enum {
     MODE_NONE,
     MODE_DEFINING_WINDOW,
-    MODE_DEFINING_LINE
+    MODE_DEFINING_LINE,
+    MODE_DRAWING_POLYGON,
+    MODE_FILLING_POLYGON
 } InteractionMode;
 
 // Global variables for clipping interaction
@@ -24,13 +26,21 @@ static Rect g_clipWindow;
 static int g_windowClickCount = 0;
 static int g_isDefiningLine = 0;
 static int g_lineStartX = 0, g_lineStartY = 0;
+static Polygon* g_currentPolygon = nullptr;
 
 // Forward declarations
 void StartWindowDefinition();
+void StartPolygonDrawing();
+void HandlePolygonDrawing(Canvas* canvas, int x, int y, int isRightClick);
 
 // Function to be called from UI to start clipping mode
 void UI_StartClippingMode(void) {
     StartWindowDefinition();
+}
+
+// Function to be called from UI to start polygon drawing mode
+void UI_StartPolygonDrawing(void) {
+    StartPolygonDrawing();
 }
 
 // Function to start window definition mode
@@ -106,6 +116,39 @@ void HandleLineDefinition(Canvas* canvas, int x, int y, int mouseDown) {
         
         // Reset mode
         g_currentMode = MODE_NONE;
+    }
+}
+
+void StartPolygonDrawing() {
+    g_currentMode = MODE_DRAWING_POLYGON;
+    if (g_currentPolygon) {
+        Graphics_DestroyPolygon(g_currentPolygon);
+    }
+    g_currentPolygon = Graphics_CreatePolygon(100);
+    UI_SetCurrentPolygon(g_currentPolygon);
+    printf("Mode: Drawing polygon - left click to add vertices, right click to close\n");
+}
+
+void HandlePolygonDrawing(Canvas* canvas, int x, int y, int isRightClick) {
+    if (isRightClick) {
+        if (g_currentPolygon && g_currentPolygon->vertex_count >= 3) {
+            Graphics_DrawLine_Bresenham(canvas, 
+                g_currentPolygon->vertices[g_currentPolygon->vertex_count-1].x,
+                g_currentPolygon->vertices[g_currentPolygon->vertex_count-1].y,
+                g_currentPolygon->vertices[0].x, g_currentPolygon->vertices[0].y,
+                0xFF000000);
+            g_currentMode = MODE_FILLING_POLYGON;
+            printf("Polygon closed. Ready for filling.\n");
+        }
+    } else {
+        Graphics_AddVertexToPolygon(g_currentPolygon, x, y);
+        if (g_currentPolygon->vertex_count > 1) {
+            Graphics_DrawLine_Bresenham(canvas,
+                g_currentPolygon->vertices[g_currentPolygon->vertex_count-2].x,
+                g_currentPolygon->vertices[g_currentPolygon->vertex_count-2].y,
+                x, y, 0xFF000000);
+        }
+        Canvas_SetPixel(canvas, x, y, 0xFF000000);
     }
 }
 
@@ -193,6 +236,19 @@ int main(int, char**) {
                         } else if (g_currentMode == MODE_DEFINING_LINE) {
                             HandleLineDefinition(canvas, canvasX, canvasY, 1); // mouseDown = 1
                             UI_TriggerTextureUpdate();
+                        } else if (g_currentMode == MODE_DRAWING_POLYGON) {
+                            HandlePolygonDrawing(canvas, canvasX, canvasY, 0);
+                            UI_TriggerTextureUpdate();
+                        } else if (g_currentMode == MODE_FILLING_POLYGON) {
+                            int fillAlgorithm = UI_GetSelectedFillAlgorithm();
+                            if (fillAlgorithm == 0 || fillAlgorithm == 1) {
+                                uint32_t targetColorUint = Canvas_GetPixel(canvas, canvasX, canvasY);
+                                Color targetColor = Graphics_Uint32ToColor(targetColorUint);
+                                Color fillColor = {255, 0, 0, 255};
+                                int connectivity = (fillAlgorithm == 0) ? 4 : 8;
+                                Graphics_Fill_FloodFill(canvas, canvasX, canvasY, targetColor, fillColor, connectivity);
+                                UI_TriggerTextureUpdate();
+                            }
                         } else {
                             // Normal line drawing mode
                             if (waitingForFirstClick) {
@@ -223,7 +279,7 @@ int main(int, char**) {
                 }
             }
             
-            // Handle right mouse button for circle drawing
+            // Handle right mouse button for circle drawing and polygon closing
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT) {
                 ImGuiIO& io = ImGui::GetIO();
                 if (!io.WantCaptureMouse) {
@@ -233,9 +289,14 @@ int main(int, char**) {
                     int canvasY = mouseY - 50;
                     
                     if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
-                        drawingCircle = true;
-                        circleCenterX = canvasX;
-                        circleCenterY = canvasY;
+                        if (g_currentMode == MODE_DRAWING_POLYGON) {
+                            HandlePolygonDrawing(canvas, canvasX, canvasY, 1);
+                            UI_TriggerTextureUpdate();
+                        } else {
+                            drawingCircle = true;
+                            circleCenterX = canvasX;
+                            circleCenterY = canvasY;
+                        }
                     }
                 }
             }
@@ -359,6 +420,10 @@ int main(int, char**) {
     // --- 5. Limpeza ---
     SDL_DestroyTexture(canvasTexture);
     Canvas_Destroy(canvas);
+    
+    if (g_currentPolygon) {
+        Graphics_DestroyPolygon(g_currentPolygon);
+    }
     
     UI_Cleanup();
     

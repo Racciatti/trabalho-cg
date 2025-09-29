@@ -481,3 +481,258 @@ void Graphics_DrawRect(Canvas* canvas, Rect rect, uint32_t color) {
     Graphics_DrawLine_Simple(canvas, rect.xmax, rect.ymax, rect.xmin, rect.ymax, color); // Top
     Graphics_DrawLine_Simple(canvas, rect.xmin, rect.ymax, rect.xmin, rect.ymin, color); // Left
 }
+
+Polygon* Graphics_CreatePolygon(int capacity) {
+    Polygon* poly = malloc(sizeof(Polygon));
+    if (!poly) return NULL;
+    
+    poly->vertices = malloc(capacity * sizeof(Point));
+    if (!poly->vertices) {
+        free(poly);
+        return NULL;
+    }
+    
+    poly->vertex_count = 0;
+    poly->capacity = capacity;
+    return poly;
+}
+
+void Graphics_DestroyPolygon(Polygon* poly) {
+    if (poly) {
+        free(poly->vertices);
+        free(poly);
+    }
+}
+
+void Graphics_AddVertexToPolygon(Polygon* poly, int x, int y) {
+    if (poly && poly->vertex_count < poly->capacity) {
+        poly->vertices[poly->vertex_count].x = x;
+        poly->vertices[poly->vertex_count].y = y;
+        poly->vertex_count++;
+    }
+}
+
+void Graphics_DrawPolygon(Canvas* canvas, Polygon* poly, uint32_t color) {
+    if (!poly || poly->vertex_count < 2) return;
+    
+    for (int i = 0; i < poly->vertex_count - 1; i++) {
+        Graphics_DrawLine_Bresenham(canvas,
+            poly->vertices[i].x, poly->vertices[i].y,
+            poly->vertices[i+1].x, poly->vertices[i+1].y, color);
+    }
+    
+    if (poly->vertex_count >= 3) {
+        Graphics_DrawLine_Bresenham(canvas,
+            poly->vertices[poly->vertex_count-1].x, poly->vertices[poly->vertex_count-1].y,
+            poly->vertices[0].x, poly->vertices[0].y, color);
+    }
+}
+
+uint32_t Graphics_ColorToUint32(Color color) {
+    return (color.a << 24) | (color.r << 16) | (color.g << 8) | color.b;
+}
+
+Color Graphics_Uint32ToColor(uint32_t color) {
+    Color c;
+    c.a = (color >> 24) & 0xFF;
+    c.r = (color >> 16) & 0xFF;
+    c.g = (color >> 8) & 0xFF;
+    c.b = color & 0xFF;
+    return c;
+}
+
+typedef struct {
+    int x, y;
+} FloodFillPoint;
+
+void Graphics_Fill_FloodFill(Canvas* canvas, int x, int y, Color targetColor, Color replacementColor, int connectivity) {
+    if (x < 0 || x >= canvas->width || y < 0 || y >= canvas->height) return;
+    
+    uint32_t targetColorUint = Graphics_ColorToUint32(targetColor);
+    uint32_t replacementColorUint = Graphics_ColorToUint32(replacementColor);
+    uint32_t currentPixel = Canvas_GetPixel(canvas, x, y);
+    
+    if (currentPixel != targetColorUint || targetColorUint == replacementColorUint) return;
+    
+    FloodFillPoint* stack = malloc(canvas->width * canvas->height * sizeof(FloodFillPoint));
+    int stackSize = 0;
+    
+    stack[stackSize++] = (FloodFillPoint){x, y};
+    
+    int dx4[] = {0, 1, 0, -1};
+    int dy4[] = {-1, 0, 1, 0};
+    int dx8[] = {0, 1, 1, 1, 0, -1, -1, -1};
+    int dy8[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    
+    int* dx = (connectivity == 4) ? dx4 : dx8;
+    int* dy = (connectivity == 4) ? dy4 : dy8;
+    int directions = (connectivity == 4) ? 4 : 8;
+    
+    while (stackSize > 0) {
+        FloodFillPoint current = stack[--stackSize];
+        
+        if (current.x < 0 || current.x >= canvas->width || 
+            current.y < 0 || current.y >= canvas->height) continue;
+            
+        if (Canvas_GetPixel(canvas, current.x, current.y) != targetColorUint) continue;
+        
+        Canvas_SetPixel(canvas, current.x, current.y, replacementColorUint);
+        
+        for (int i = 0; i < directions; i++) {
+            int nx = current.x + dx[i];
+            int ny = current.y + dy[i];
+            
+            if (nx >= 0 && nx < canvas->width && ny >= 0 && ny < canvas->height &&
+                Canvas_GetPixel(canvas, nx, ny) == targetColorUint) {
+                stack[stackSize++] = (FloodFillPoint){nx, ny};
+            }
+        }
+    }
+    
+    free(stack);
+}
+
+typedef struct {
+    int ymax;
+    float x;
+    float dx;
+} EdgeTableEntry;
+
+typedef struct {
+    EdgeTableEntry* edges;
+    int count;
+    int capacity;
+} EdgeList;
+
+static EdgeList* CreateEdgeList(int capacity) {
+    EdgeList* list = malloc(sizeof(EdgeList));
+    if (!list) return NULL;
+    
+    list->edges = malloc(capacity * sizeof(EdgeTableEntry));
+    if (!list->edges) {
+        free(list);
+        return NULL;
+    }
+    
+    list->count = 0;
+    list->capacity = capacity;
+    return list;
+}
+
+static void DestroyEdgeList(EdgeList* list) {
+    if (list) {
+        free(list->edges);
+        free(list);
+    }
+}
+
+static void AddEdgeToList(EdgeList* list, int ymax, float x, float dx) {
+    if (list->count < list->capacity) {
+        list->edges[list->count].ymax = ymax;
+        list->edges[list->count].x = x;
+        list->edges[list->count].dx = dx;
+        list->count++;
+    }
+}
+
+static void SortEdgesByX(EdgeList* list) {
+    for (int i = 0; i < list->count - 1; i++) {
+        for (int j = 0; j < list->count - i - 1; j++) {
+            if (list->edges[j].x > list->edges[j + 1].x) {
+                EdgeTableEntry temp = list->edges[j];
+                list->edges[j] = list->edges[j + 1];
+                list->edges[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void Graphics_Fill_Scanline(Canvas* canvas, Polygon* poly, Color color) {
+    if (!poly || poly->vertex_count < 3) return;
+    
+    int minY = poly->vertices[0].y;
+    int maxY = poly->vertices[0].y;
+    
+    for (int i = 1; i < poly->vertex_count; i++) {
+        if (poly->vertices[i].y < minY) minY = poly->vertices[i].y;
+        if (poly->vertices[i].y > maxY) maxY = poly->vertices[i].y;
+    }
+    
+    if (minY < 0) minY = 0;
+    if (maxY >= canvas->height) maxY = canvas->height - 1;
+    
+    EdgeList** edgeTable = malloc((maxY - minY + 1) * sizeof(EdgeList*));
+    for (int i = 0; i <= maxY - minY; i++) {
+        edgeTable[i] = CreateEdgeList(poly->vertex_count);
+    }
+    
+    for (int i = 0; i < poly->vertex_count; i++) {
+        int j = (i + 1) % poly->vertex_count;
+        int x1 = poly->vertices[i].x;
+        int y1 = poly->vertices[i].y;
+        int x2 = poly->vertices[j].x;
+        int y2 = poly->vertices[j].y;
+        
+        if (y1 == y2) continue;
+        
+        if (y1 > y2) {
+            int temp = x1; x1 = x2; x2 = temp;
+            temp = y1; y1 = y2; y2 = temp;
+        }
+        
+        if (y1 >= minY && y1 <= maxY) {
+            float dx = (float)(x2 - x1) / (y2 - y1);
+            AddEdgeToList(edgeTable[y1 - minY], y2, x1, dx);
+        }
+    }
+    
+    EdgeList* activeEdgeList = CreateEdgeList(poly->vertex_count);
+    uint32_t fillColor = Graphics_ColorToUint32(color);
+    
+    for (int y = minY; y <= maxY; y++) {
+        for (int i = 0; i < edgeTable[y - minY]->count; i++) {
+            AddEdgeToList(activeEdgeList, 
+                edgeTable[y - minY]->edges[i].ymax,
+                edgeTable[y - minY]->edges[i].x,
+                edgeTable[y - minY]->edges[i].dx);
+        }
+        
+        for (int i = 0; i < activeEdgeList->count; i++) {
+            if (activeEdgeList->edges[i].ymax <= y) {
+                for (int j = i; j < activeEdgeList->count - 1; j++) {
+                    activeEdgeList->edges[j] = activeEdgeList->edges[j + 1];
+                }
+                activeEdgeList->count--;
+                i--;
+            }
+        }
+        
+        SortEdgesByX(activeEdgeList);
+        
+        for (int i = 0; i < activeEdgeList->count; i += 2) {
+            if (i + 1 < activeEdgeList->count) {
+                int xStart = (int)(activeEdgeList->edges[i].x + 0.5f);
+                int xEnd = (int)(activeEdgeList->edges[i + 1].x + 0.5f);
+                
+                if (xStart < 0) xStart = 0;
+                if (xEnd >= canvas->width) xEnd = canvas->width - 1;
+                
+                for (int x = xStart; x <= xEnd; x++) {
+                    if (y >= 0 && y < canvas->height && x >= 0 && x < canvas->width) {
+                        Canvas_SetPixel(canvas, x, y, fillColor);
+                    }
+                }
+            }
+        }
+        
+        for (int i = 0; i < activeEdgeList->count; i++) {
+            activeEdgeList->edges[i].x += activeEdgeList->edges[i].dx;
+        }
+    }
+    
+    DestroyEdgeList(activeEdgeList);
+    for (int i = 0; i <= maxY - minY; i++) {
+        DestroyEdgeList(edgeTable[i]);
+    }
+    free(edgeTable);
+}

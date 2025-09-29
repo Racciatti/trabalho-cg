@@ -20,6 +20,7 @@ static bool g_showFileDialog = false;
 static bool g_textureNeedsUpdate = false;
 static int g_selectedLineAlgorithm = 0;
 static int g_selectedCircleAlgorithm = 0;
+static int g_selectedFillAlgorithm = 0;
 static float g_translate[3] = {0.0f, 0.0f, 0.0f};
 static float g_scale[3] = {1.0f, 1.0f, 1.0f};
 static int g_rotationAxis = 0;
@@ -308,9 +309,50 @@ void UI_Render(void) {
     ImGui::TextWrapped("2. Clique em dois cantos opostos para definir a janela");
     ImGui::TextWrapped("3. Arraste para desenhar uma linha que será recortada");
     
+    ImGui::Separator();
+    
+    ImGui::Text("Preenchimento de Polígonos:");
+    if (ImGui::Button("Desenhar Polígono")) {
+        UI_StartPolygonDrawing();
+    }
+    ImGui::Text("Algoritmo de Preenchimento:");
+    ImGui::RadioButton("Flood Fill 4", &g_selectedFillAlgorithm, 0);
+    ImGui::RadioButton("Flood Fill 8", &g_selectedFillAlgorithm, 1);
+    ImGui::RadioButton("Scan-line", &g_selectedFillAlgorithm, 2);
+    
+    if (ImGui::Button("Preencher Polígono (Scan-line)")) {
+        UI_FillPolygonScanline();
+    }
+    
+    ImGui::TextWrapped("1. Clique em 'Desenhar Polígono'");
+    ImGui::TextWrapped("2. Clique com botão esquerdo para adicionar vértices");
+    ImGui::TextWrapped("3. Clique com botão direito para fechar o polígono");
+    ImGui::TextWrapped("4. Para Flood Fill: clique dentro do polígono");
+    ImGui::TextWrapped("5. Para Scan-line: use o botão acima");
+    
     ImGui::End();
     
     RenderFileDialog();
+}
+
+int UI_GetSelectedFillAlgorithm(void) {
+    return g_selectedFillAlgorithm;
+}
+
+static Polygon* g_uiCurrentPolygon = nullptr;
+
+void UI_SetCurrentPolygon(Polygon* poly) {
+    g_uiCurrentPolygon = poly;
+}
+
+void UI_FillPolygonScanline(void) {
+    if (g_uiCurrentPolygon && g_uiCurrentPolygon->vertex_count >= 3) {
+        if (g_canvas) {
+            Color fillColor = {0, 255, 0, 255};
+            Graphics_Fill_Scanline(g_canvas, g_uiCurrentPolygon, fillColor);
+            g_textureNeedsUpdate = true;
+        }
+    }
 }
 
 void UI_Cleanup(void) {
