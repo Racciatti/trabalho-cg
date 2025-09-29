@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <math.h>
 
 // Headers do Dear ImGui
 #include "imgui.h"
@@ -60,6 +61,10 @@ int main(int, char**) {
     // Line drawing state
     bool waitingForFirstClick = true;
     int firstClickX = 0, firstClickY = 0;
+    
+    // Circle drawing state
+    bool drawingCircle = false;
+    int circleCenterX = 0, circleCenterY = 0;
 
     // --- 4. Loop Principal da Aplicação ---
     bool done = false;
@@ -107,6 +112,64 @@ int main(int, char**) {
                             waitingForFirstClick = true;
                         }
                     }
+                }
+            }
+            
+            // Handle right mouse button for circle drawing
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT) {
+                ImGuiIO& io = ImGui::GetIO();
+                if (!io.WantCaptureMouse) {
+                    int mouseX = event.button.x;
+                    int mouseY = event.button.y;
+                    int canvasX = mouseX - 50;
+                    int canvasY = mouseY - 50;
+                    
+                    if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
+                        drawingCircle = true;
+                        circleCenterX = canvasX;
+                        circleCenterY = canvasY;
+                    }
+                }
+            }
+            
+            if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_RIGHT) {
+                if (drawingCircle) {
+                    ImGuiIO& io = ImGui::GetIO();
+                    if (!io.WantCaptureMouse) {
+                        int mouseX = event.button.x;
+                        int mouseY = event.button.y;
+                        int canvasX = mouseX - 50;
+                        int canvasY = mouseY - 50;
+                        
+                        if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
+                            int dx = canvasX - circleCenterX;
+                            int dy = canvasY - circleCenterY;
+                            int radius = (int)(sqrt(dx * dx + dy * dy) + 0.5f);
+                            
+                            if (radius > 0) {
+                                int algorithm = UI_GetSelectedCircleAlgorithm();
+                                uint32_t color = 0xFF000000;
+                                
+                                switch (algorithm) {
+                                    case 0:
+                                        Graphics_DrawCircle_Explicit(canvas, circleCenterX, circleCenterY, radius, color);
+                                        break;
+                                    case 1:
+                                        Graphics_DrawCircle_Parametric(canvas, circleCenterX, circleCenterY, radius, color);
+                                        break;
+                                    case 2:
+                                        Graphics_DrawCircle_IncrementalRotation(canvas, circleCenterX, circleCenterY, radius, color);
+                                        break;
+                                    case 3:
+                                        Graphics_DrawCircle_Bresenham(canvas, circleCenterX, circleCenterY, radius, color);
+                                        break;
+                                }
+                                
+                                UI_TriggerTextureUpdate();
+                            }
+                        }
+                    }
+                    drawingCircle = false;
                 }
             }
         }

@@ -1,6 +1,11 @@
 #include "graphics.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 void Graphics_ApplyGrayscale(Canvas* canvas) {
     if (!canvas || !canvas->pixels) return;
@@ -139,5 +144,82 @@ void Graphics_DrawLine_Bresenham(Canvas* canvas, int x1, int y1, int x2, int y2,
             err += dx;
             y += sy;
         }
+    }
+}
+
+void Graphics_DrawCircle_Explicit(Canvas* canvas, int xc, int yc, int r, uint32_t color) {
+    if (!canvas || r <= 0) return;
+    
+    for (int x = -r; x <= r; x++) {
+        int y_squared = r * r - x * x;
+        if (y_squared >= 0) {
+            int y = (int)(sqrt(y_squared) + 0.5f);
+            Canvas_SetPixel(canvas, xc + x, yc + y, color);
+            Canvas_SetPixel(canvas, xc + x, yc - y, color);
+        }
+    }
+}
+
+void Graphics_DrawCircle_Parametric(Canvas* canvas, int xc, int yc, int r, uint32_t color) {
+    if (!canvas || r <= 0) return;
+    
+    int steps = 8 * r;
+    if (steps < 360) steps = 360;
+    
+    for (int i = 0; i < steps; i++) {
+        float angle = 2.0f * M_PI * i / steps;
+        int x = (int)(r * cos(angle) + 0.5f);
+        int y = (int)(r * sin(angle) + 0.5f);
+        Canvas_SetPixel(canvas, xc + x, yc + y, color);
+    }
+}
+
+void Graphics_DrawCircle_IncrementalRotation(Canvas* canvas, int xc, int yc, int r, uint32_t color) {
+    if (!canvas || r <= 0) return;
+    
+    int steps = 8 * r;
+    if (steps < 360) steps = 360;
+    
+    float angle_step = 2.0f * M_PI / steps;
+    float cos_step = cos(angle_step);
+    float sin_step = sin(angle_step);
+    
+    float x = r;
+    float y = 0;
+    
+    for (int i = 0; i < steps; i++) {
+        Canvas_SetPixel(canvas, xc + (int)(x + 0.5f), yc + (int)(y + 0.5f), color);
+        
+        float new_x = x * cos_step - y * sin_step;
+        float new_y = x * sin_step + y * cos_step;
+        x = new_x;
+        y = new_y;
+    }
+}
+
+void Graphics_DrawCircle_Bresenham(Canvas* canvas, int xc, int yc, int r, uint32_t color) {
+    if (!canvas || r <= 0) return;
+    
+    int x = 0;
+    int y = r;
+    int d = 3 - 2 * r;
+    
+    while (x <= y) {
+        Canvas_SetPixel(canvas, xc + x, yc + y, color);
+        Canvas_SetPixel(canvas, xc + x, yc - y, color);
+        Canvas_SetPixel(canvas, xc - x, yc + y, color);
+        Canvas_SetPixel(canvas, xc - x, yc - y, color);
+        Canvas_SetPixel(canvas, xc + y, yc + x, color);
+        Canvas_SetPixel(canvas, xc + y, yc - x, color);
+        Canvas_SetPixel(canvas, xc - y, yc + x, color);
+        Canvas_SetPixel(canvas, xc - y, yc - x, color);
+        
+        if (d < 0) {
+            d = d + 4 * x + 6;
+        } else {
+            d = d + 4 * (x - y) + 10;
+            y--;
+        }
+        x++;
     }
 }

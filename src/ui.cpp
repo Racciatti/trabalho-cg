@@ -18,6 +18,7 @@ static char g_currentDir[512] = ".";
 static bool g_showFileDialog = false;
 static bool g_textureNeedsUpdate = false;
 static int g_selectedLineAlgorithm = 0;
+static int g_selectedCircleAlgorithm = 0;
 static std::vector<std::string> g_fileList;
 static std::vector<std::string> g_dirList;
 
@@ -41,6 +42,10 @@ int UI_GetSelectedLineAlgorithm() {
 
 void UI_TriggerTextureUpdate() {
     g_textureNeedsUpdate = true;
+}
+
+int UI_GetSelectedCircleAlgorithm() {
+    return g_selectedCircleAlgorithm;
 }
 
 static void ScanDirectory(const char* path) {
@@ -202,6 +207,17 @@ void UI_Render(void) {
     ImGui::RadioButton("Equação Geral", &g_selectedLineAlgorithm, 0);
     ImGui::RadioButton("Paramétrica", &g_selectedLineAlgorithm, 1);
     ImGui::RadioButton("Bresenham", &g_selectedLineAlgorithm, 2);
+    
+    ImGui::Separator();
+    
+    ImGui::Text("Desenho de Circunferências:");
+    ImGui::RadioButton("Explícita", &g_selectedCircleAlgorithm, 0);
+    ImGui::RadioButton("Paramétrica C", &g_selectedCircleAlgorithm, 1);
+    ImGui::RadioButton("Rotação Incremental", &g_selectedCircleAlgorithm, 2);
+    ImGui::RadioButton("Bresenham C", &g_selectedCircleAlgorithm, 3);
+    
+    ImGui::Text("Clique esquerdo: linhas");
+    ImGui::Text("Clique direito: círculos");
     
     ImGui::Separator();
     

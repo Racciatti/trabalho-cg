@@ -12,6 +12,7 @@ void UI_SetCanvas(Canvas* canvas);
 void UI_SetPixelInfo(const char* info);
 bool UI_TextureNeedsUpdate(void);
 int UI_GetSelectedLineAlgorithm(void);
+int UI_GetSelectedCircleAlgorithm(void);
 void UI_TriggerTextureUpdate(void);
 
 #ifdef __cplusplus
