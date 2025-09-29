@@ -1982,6 +1982,37 @@ CMakeFiles/seu_executavel.dir/src/main.cpp.o: /home/racciatti/Desktop/Code/traba
   /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/xsavesintrin.h \
   /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/xtestintrin.h
 
+CMakeFiles/seu_executavel.dir/src/matrix.c.o: /home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c \
+  /home/racciatti/Desktop/Code/trabalho-cg/include/matrix.h \
+  /usr/include/features-time64.h \
+  /usr/include/features.h \
+  /usr/include/math.h \
+  /usr/include/stdc-predef.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+  /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/timesize.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+  /usr/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include/stddef.h
+
 CMakeFiles/seu_executavel.dir/src/ui.cpp.o: /home/racciatti/Desktop/Code/trabalho-cg/src/ui.cpp \
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imconfig.h \
   /home/racciatti/Desktop/Code/trabalho-cg/deps/imgui/imgui.h \
@@ -2234,8 +2265,11 @@ seu_executavel: /lib64/ld-linux-x86-64.so.2 \
   CMakeFiles/seu_executavel.dir/src/canvas.c.o \
   CMakeFiles/seu_executavel.dir/src/graphics.c.o \
   CMakeFiles/seu_executavel.dir/src/main.cpp.o \
+  CMakeFiles/seu_executavel.dir/src/matrix.c.o \
   CMakeFiles/seu_executavel.dir/src/ui.cpp.o
 
+
+CMakeFiles/seu_executavel.dir/src/matrix.c.o:
 
 CMakeFiles/seu_executavel.dir/src/main.cpp.o:
 
@@ -2364,6 +2398,8 @@ CMakeFiles/seu_executavel.dir/deps/imgui/imgui_tables.cpp.o:
 /usr/include/asm-generic/errno.h:
 
 /home/racciatti/Desktop/Code/trabalho-cg/src/ui.cpp:
+
+/home/racciatti/Desktop/Code/trabalho-cg/src/matrix.c:
 
 /home/racciatti/Desktop/Code/trabalho-cg/src/main.cpp:
 
