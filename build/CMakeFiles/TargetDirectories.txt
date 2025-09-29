@@ -1,0 +1,3 @@
+/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles/seu_executavel.dir
+/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles/edit_cache.dir
+/home/racciatti/Desktop/Code/trabalho-cg/build/CMakeFiles/rebuild_cache.dir

@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     int width;
     int height;
@@ -13,5 +17,9 @@ Canvas* Canvas_Create(int width, int height);
 void Canvas_Destroy(Canvas* canvas);
 void Canvas_Clear(Canvas* canvas, uint32_t color);
 void Canvas_SetPixel(Canvas* canvas, int x, int y, uint32_t color);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
