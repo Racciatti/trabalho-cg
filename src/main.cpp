@@ -49,7 +49,7 @@ int main(int, char**) {
     }
     UI_SetCanvas(canvas);
 
-    SDL_Texture* canvasTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+    SDL_Texture* canvasTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                                                    SDL_TEXTUREACCESS_STREAMING,
                                                    canvas->width, canvas->height);
 

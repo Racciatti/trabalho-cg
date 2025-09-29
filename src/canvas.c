@@ -72,7 +72,7 @@ int Canvas_LoadImage(Canvas* canvas, const char* filename) {
         uint8_t g = data[i * 4 + 1];
         uint8_t b = data[i * 4 + 2];
         uint8_t a = data[i * 4 + 3];
-        canvas->pixels[i] = (a << 24) | (r << 16) | (g << 8) | b;
+        canvas->pixels[i] = (a << 24) | (b << 16) | (g << 8) | r;
     }
     
     stbi_image_free(data);
