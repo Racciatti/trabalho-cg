@@ -154,7 +154,7 @@ void UI_Render(void) {
     if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
     
     // Left Column
-    if (ImGui::BeginChild("LeftColumn", ImVec2(180, 0), true)) {
+    if (ImGui::BeginChild("LeftColumn", ImVec2(200, 0), true)) {
         ImGui::Text("Carregamento de Imagem:");
     
     if (ImGui::Button("Selecionar Imagem...")) {
@@ -249,7 +249,7 @@ void UI_Render(void) {
     ImGui::SameLine();
     
     // Right Column
-    if (ImGui::BeginChild("RightColumn", ImVec2(180, 0), true)) {
+    if (ImGui::BeginChild("RightColumn", ImVec2(240, 0), true)) {
         ImGui::Text("Transformações 3D:");
     
     // Translation controls
