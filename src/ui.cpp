@@ -17,6 +17,7 @@ static char g_statusMessage[256] = "";
 static char g_currentDir[512] = ".";
 static bool g_showFileDialog = false;
 static bool g_textureNeedsUpdate = false;
+static int g_selectedLineAlgorithm = 0;
 static std::vector<std::string> g_fileList;
 static std::vector<std::string> g_dirList;
 
@@ -32,6 +33,14 @@ bool UI_TextureNeedsUpdate() {
     bool needsUpdate = g_textureNeedsUpdate;
     g_textureNeedsUpdate = false;
     return needsUpdate;
+}
+
+int UI_GetSelectedLineAlgorithm() {
+    return g_selectedLineAlgorithm;
+}
+
+void UI_TriggerTextureUpdate() {
+    g_textureNeedsUpdate = true;
 }
 
 static void ScanDirectory(const char* path) {
@@ -186,6 +195,13 @@ void UI_Render(void) {
             g_textureNeedsUpdate = true;
         }
     }
+    
+    ImGui::Separator();
+    
+    ImGui::Text("Desenho de Linhas:");
+    ImGui::RadioButton("Equação Geral", &g_selectedLineAlgorithm, 0);
+    ImGui::RadioButton("Paramétrica", &g_selectedLineAlgorithm, 1);
+    ImGui::RadioButton("Bresenham", &g_selectedLineAlgorithm, 2);
     
     ImGui::Separator();
     

@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include <stdint.h>
+#include <stdlib.h>
 
 void Graphics_ApplyGrayscale(Canvas* canvas) {
     if (!canvas || !canvas->pixels) return;
@@ -60,5 +61,83 @@ void Graphics_ApplyChannel(Canvas* canvas, Channel c) {
         }
         
         canvas->pixels[i] = (a << 24) | (r << 16) | (g << 8) | b;
+    }
+}
+
+void Graphics_DrawLine_GeneralEquation(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color) {
+    if (!canvas) return;
+    
+    if (x1 == x2) {
+        int start_y = y1 < y2 ? y1 : y2;
+        int end_y = y1 > y2 ? y1 : y2;
+        for (int y = start_y; y <= end_y; y++) {
+            Canvas_SetPixel(canvas, x1, y, color);
+        }
+        return;
+    }
+    
+    float m = (float)(y2 - y1) / (float)(x2 - x1);
+    float b = y1 - m * x1;
+    
+    int start_x = x1 < x2 ? x1 : x2;
+    int end_x = x1 > x2 ? x1 : x2;
+    
+    for (int x = start_x; x <= end_x; x++) {
+        int y = (int)(m * x + b + 0.5f);
+        Canvas_SetPixel(canvas, x, y, color);
+    }
+}
+
+void Graphics_DrawLine_Parametric(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color) {
+    if (!canvas) return;
+    
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+    
+    if (steps == 0) {
+        Canvas_SetPixel(canvas, x1, y1, color);
+        return;
+    }
+    
+    float x_inc = (float)dx / steps;
+    float y_inc = (float)dy / steps;
+    
+    float x = x1;
+    float y = y1;
+    
+    for (int i = 0; i <= steps; i++) {
+        Canvas_SetPixel(canvas, (int)(x + 0.5f), (int)(y + 0.5f), color);
+        x += x_inc;
+        y += y_inc;
+    }
+}
+
+void Graphics_DrawLine_Bresenham(Canvas* canvas, int x1, int y1, int x2, int y2, uint32_t color) {
+    if (!canvas) return;
+    
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int sx = x1 < x2 ? 1 : -1;
+    int sy = y1 < y2 ? 1 : -1;
+    int err = dx - dy;
+    
+    int x = x1;
+    int y = y1;
+    
+    while (1) {
+        Canvas_SetPixel(canvas, x, y, color);
+        
+        if (x == x2 && y == y2) break;
+        
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y += sy;
+        }
     }
 }

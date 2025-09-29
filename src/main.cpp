@@ -8,6 +8,7 @@
 
 #include "canvas.h"
 #include "ui.h"
+#include "graphics.h"
 
 int main(int, char**) {
     // --- 1. Inicialização do SDL ---
@@ -56,6 +57,10 @@ int main(int, char**) {
     // Initial texture update to show the blank canvas
     SDL_UpdateTexture(canvasTexture, NULL, canvas->pixels, canvas->width * sizeof(uint32_t));
 
+    // Line drawing state
+    bool waitingForFirstClick = true;
+    int firstClickX = 0, firstClickY = 0;
+
     // --- 4. Loop Principal da Aplicação ---
     bool done = false;
     while (!done) {
@@ -67,6 +72,43 @@ int main(int, char**) {
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
+            
+            // Handle mouse clicks for line drawing
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+                ImGuiIO& io = ImGui::GetIO();
+                if (!io.WantCaptureMouse) {
+                    int mouseX = event.button.x;
+                    int mouseY = event.button.y;
+                    int canvasX = mouseX - 50;
+                    int canvasY = mouseY - 50;
+                    
+                    if (canvasX >= 0 && canvasX < canvas->width && canvasY >= 0 && canvasY < canvas->height) {
+                        if (waitingForFirstClick) {
+                            firstClickX = canvasX;
+                            firstClickY = canvasY;
+                            waitingForFirstClick = false;
+                        } else {
+                            int algorithm = UI_GetSelectedLineAlgorithm();
+                            uint32_t color = 0xFF000000;
+                            
+                            switch (algorithm) {
+                                case 0:
+                                    Graphics_DrawLine_GeneralEquation(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                    break;
+                                case 1:
+                                    Graphics_DrawLine_Parametric(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                    break;
+                                case 2:
+                                    Graphics_DrawLine_Bresenham(canvas, firstClickX, firstClickY, canvasX, canvasY, color);
+                                    break;
+                            }
+                            
+                            UI_TriggerTextureUpdate();
+                            waitingForFirstClick = true;
+                        }
+                    }
+                }
+            }
         }
 
         // --- Inspetor de Pixels ---
