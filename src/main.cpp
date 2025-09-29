@@ -190,6 +190,10 @@ int main(int, char**) {
         printf("Error: Could not create canvas!\n");
         return -1;
     }
+    
+    // Initialize canvas with white background
+    Canvas_Clear(canvas, 0xFFFFFFFF);
+    
     UI_SetCanvas(canvas);
 
     SDL_Texture* canvasTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,

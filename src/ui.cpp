@@ -140,10 +140,15 @@ static void RenderFileDialog() {
 }
 
 void UI_Render(void) {
-    ImGui::SetNextWindowSize(ImVec2(250, 400), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
     ImGui::Begin("Painel de Controle");
     
-    ImGui::Text("Carregamento de Imagem:");
+    // Make the window scrollable
+    if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    
+    // Left Column
+    if (ImGui::BeginChild("LeftColumn", ImVec2(180, 0), true)) {
+        ImGui::Text("Carregamento de Imagem:");
     
     if (ImGui::Button("Selecionar Imagem...")) {
         g_showFileDialog = true;
@@ -231,10 +236,14 @@ void UI_Render(void) {
     ImGui::Text("Inspetor de Pixels:");
     ImGui::Text("%s", g_pixelInfo);
     
-    ImGui::Separator();
+    }
+    ImGui::EndChild();
     
-    // 3D Transformations
-    ImGui::Text("Transformações 3D:");
+    ImGui::SameLine();
+    
+    // Right Column
+    if (ImGui::BeginChild("RightColumn", ImVec2(180, 0), true)) {
+        ImGui::Text("Transformações 3D:");
     
     // Translation controls
     ImGui::Text("Translação:");
@@ -330,6 +339,11 @@ void UI_Render(void) {
     ImGui::TextWrapped("4. Para Flood Fill: clique dentro do polígono");
     ImGui::TextWrapped("5. Para Scan-line: use o botão acima");
     
+    }
+    ImGui::EndChild();
+    
+    }
+    ImGui::EndChild();
     ImGui::End();
     
     RenderFileDialog();
