@@ -251,13 +251,11 @@ void UI_Render(void) {
     ImGui::SliderFloat("Ty", &g_translate[1], -200.0f, 200.0f);
     ImGui::SliderFloat("Tz", &g_translate[2], -200.0f, 200.0f);
     
-    // Scale controls
-    ImGui::Text("Escala:");
-    ImGui::SliderFloat("Sx", &g_scale[0], 0.1f, 3.0f);
-    ImGui::SliderFloat("Sy", &g_scale[1], 0.1f, 3.0f);
-    ImGui::SliderFloat("Sz", &g_scale[2], 0.1f, 3.0f);
-    
-    // Rotation controls
+        // Scale controls
+        ImGui::Text("Escala:");
+        ImGui::SliderFloat("Sx", &g_scale[0], -3.0f, 3.0f);
+        ImGui::SliderFloat("Sy", &g_scale[1], -3.0f, 3.0f);
+        ImGui::SliderFloat("Sz", &g_scale[2], -3.0f, 3.0f);    // Rotation controls
     ImGui::Text("Rotação:");
     ImGui::RadioButton("Eixo X", &g_rotationAxis, 0);
     ImGui::SameLine();
@@ -266,7 +264,14 @@ void UI_Render(void) {
     ImGui::RadioButton("Eixo Z", &g_rotationAxis, 2);
     ImGui::SliderFloat("Ângulo", &g_rotationAngle, 0.0f, 360.0f);
     
-    // Apply transformation button
+    // Reset and Apply buttons
+    if (ImGui::Button("RESET")) {
+        g_translate[0] = g_translate[1] = g_translate[2] = 0.0f;
+        g_scale[0] = g_scale[1] = g_scale[2] = 1.0f;
+        g_rotationAngle = 0.0f;
+        g_rotationAxis = 0;
+    }
+    ImGui::SameLine();
     if (ImGui::Button("Aplicar Transformação")) {
         if (g_object3D == nullptr) {
             // Create cube if it doesn't exist
@@ -275,11 +280,15 @@ void UI_Render(void) {
         
         // Clear canvas
         if (g_canvas) {
-            Canvas_Clear(g_canvas, 0xFF000000); // Clear to black
+            Canvas_Clear(g_canvas, 0xFFFFFFFF); // Clear to white
         }
         
         // Create transformation matrix
         Matrix4x4 transform = Matrix4x4_Identity();
+        
+        // Apply initial 45-degree rotation on Y axis for better 3D visualization
+        Matrix4x4 initialRotation = Matrix4x4_RotationY(45.0f * M_PI / 180.0f);
+        transform = Matrix4x4_Multiply(transform, initialRotation);
         
         // Apply translation
         Matrix4x4 translation = Matrix4x4_Translation(g_translate[0], g_translate[1], g_translate[2]);
@@ -302,7 +311,7 @@ void UI_Render(void) {
         
         // Render object
         if (g_canvas) {
-            Graphics_RenderObject3D(g_canvas, g_object3D, transform, 0xFFFFFFFF);
+            Graphics_RenderObject3D(g_canvas, g_object3D, transform, 0xFF000000);
             g_textureNeedsUpdate = true;
         }
     }
