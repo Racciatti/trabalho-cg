@@ -21,6 +21,7 @@ void UI_StartPolygonDrawing(void);
 int UI_GetSelectedFillAlgorithm(void);
 void UI_FillPolygonScanline(void);
 void UI_SetCurrentPolygon(Polygon* poly);
+int UI_GetCurrentMode(void);
 
 #ifdef __cplusplus
 }

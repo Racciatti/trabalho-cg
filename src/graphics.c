@@ -554,9 +554,11 @@ void Graphics_Fill_FloodFill(Canvas* canvas, int x, int y, Color targetColor, Co
     
     if (currentPixel != targetColorUint || targetColorUint == replacementColorUint) return;
     
-    FloodFillPoint* stack = malloc(canvas->width * canvas->height * sizeof(FloodFillPoint));
-    int stackSize = 0;
+    int maxStackSize = canvas->width * canvas->height;
+    FloodFillPoint* stack = malloc(maxStackSize * sizeof(FloodFillPoint));
+    if (!stack) return;
     
+    int stackSize = 0;
     stack[stackSize++] = (FloodFillPoint){x, y};
     
     int dx4[] = {0, 1, 0, -1};
@@ -584,7 +586,9 @@ void Graphics_Fill_FloodFill(Canvas* canvas, int x, int y, Color targetColor, Co
             
             if (nx >= 0 && nx < canvas->width && ny >= 0 && ny < canvas->height &&
                 Canvas_GetPixel(canvas, nx, ny) == targetColorUint) {
-                stack[stackSize++] = (FloodFillPoint){nx, ny};
+                if (stackSize < maxStackSize - 1) {
+                    stack[stackSize++] = (FloodFillPoint){nx, ny};
+                }
             }
         }
     }

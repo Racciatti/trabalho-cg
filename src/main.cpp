@@ -43,6 +43,11 @@ void UI_StartPolygonDrawing(void) {
     StartPolygonDrawing();
 }
 
+// Function to get current interaction mode for UI
+int UI_GetCurrentMode(void) {
+    return (int)g_currentMode;
+}
+
 // Function to start window definition mode
 void StartWindowDefinition() {
     g_currentMode = MODE_DEFINING_WINDOW;
@@ -98,15 +103,15 @@ void HandleLineDefinition(Canvas* canvas, int x, int y, int mouseDown) {
         
         Line line = {g_lineStartX, g_lineStartY, x, y};
         
-        // Draw original line in black
-        Graphics_DrawLine_Simple(canvas, line.x1, line.y1, line.x2, line.y2, 0xFF000000);
+        // Draw original line in red (outside viewport)
+        Graphics_DrawLine_Simple(canvas, line.x1, line.y1, line.x2, line.y2, 0xFF0000FF);
         
         // Apply Cohen-Sutherland clipping
         Line clippedLine = line; // Make a copy
         if (Graphics_ClipLine_CohenSutherland(&clippedLine, g_clipWindow)) {
-            // Draw clipped line in black (same as original for consistency)
+            // Draw clipped line in green (inside viewport)
             Graphics_DrawLine_Simple(canvas, clippedLine.x1, clippedLine.y1, 
-                                   clippedLine.x2, clippedLine.y2, 0xFF000000);
+                                   clippedLine.x2, clippedLine.y2, 0xFF00FF00);
             printf("Line clipped from (%d,%d)-(%d,%d) to (%d,%d)-(%d,%d)\n",
                    line.x1, line.y1, line.x2, line.y2,
                    clippedLine.x1, clippedLine.y1, clippedLine.x2, clippedLine.y2);

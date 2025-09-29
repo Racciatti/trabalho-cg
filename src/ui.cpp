@@ -9,6 +9,13 @@
 #include <vector>
 #include <string>
 #include <cmath>
+
+// Mode constants for UI color coding
+#define MODE_NONE 0
+#define MODE_DEFINING_WINDOW 1
+#define MODE_DEFINING_LINE 2
+#define MODE_DRAWING_POLYGON 3
+#define MODE_FILLING_POLYGON 4
 #include <algorithm>
 
 static Canvas* g_canvas = nullptr;
@@ -264,6 +271,25 @@ void UI_Render(void) {
     ImGui::RadioButton("Eixo Z", &g_rotationAxis, 2);
     ImGui::SliderFloat("Ângulo", &g_rotationAngle, 0.0f, 360.0f);
     
+    // Generate Cube button to show initial object
+    if (ImGui::Button("Gerar Cubo")) {
+        if (g_object3D == nullptr) {
+            g_object3D = Graphics_CreateCube();
+        }
+        
+        if (g_canvas) {
+            Canvas_Clear(g_canvas, 0xFFFFFFFF); // Clear to white
+            
+            // Create initial transformation with just the 45-degree Y rotation
+            Matrix4x4 transform = Matrix4x4_Identity();
+            Matrix4x4 initialRotation = Matrix4x4_RotationY(45.0f * M_PI / 180.0f);
+            transform = Matrix4x4_Multiply(transform, initialRotation);
+            
+            Graphics_RenderObject3D(g_canvas, g_object3D, transform, 0xFF000000);
+            g_textureNeedsUpdate = true;
+        }
+    }
+    
     // Reset and Apply buttons
     if (ImGui::Button("RESET")) {
         g_translate[0] = g_translate[1] = g_translate[2] = 0.0f;
@@ -320,8 +346,22 @@ void UI_Render(void) {
     
     // Cohen-Sutherland Line Clipping
     ImGui::Text("Recorte de Linhas (Cohen-Sutherland):");
+    
+    int currentMode = UI_GetCurrentMode();
+    
+    // Color code buttons based on current mode
+    if (currentMode == MODE_DEFINING_WINDOW || currentMode == MODE_DEFINING_LINE) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.8f, 0.0f, 1.0f)); // Green for active
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+    }
+    
     if (ImGui::Button("Definir Janela de Recorte")) {
         UI_StartClippingMode();
+    }
+    
+    if (currentMode == MODE_DEFINING_WINDOW || currentMode == MODE_DEFINING_LINE) {
+        ImGui::PopStyleColor(3);
     }
     ImGui::TextWrapped("1. Clique no botão acima");
     ImGui::TextWrapped("2. Clique em dois cantos opostos para definir a janela");
@@ -330,16 +370,39 @@ void UI_Render(void) {
     ImGui::Separator();
     
     ImGui::Text("Preenchimento de Polígonos:");
+    
+    // Color code polygon drawing button
+    if (currentMode == MODE_DRAWING_POLYGON || currentMode == MODE_FILLING_POLYGON) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.8f, 0.0f, 1.0f)); // Green for active
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+    }
+    
     if (ImGui::Button("Desenhar Polígono")) {
         UI_StartPolygonDrawing();
+    }
+    
+    if (currentMode == MODE_DRAWING_POLYGON || currentMode == MODE_FILLING_POLYGON) {
+        ImGui::PopStyleColor(3);
     }
     ImGui::Text("Algoritmo de Preenchimento:");
     ImGui::RadioButton("Flood Fill 4", &g_selectedFillAlgorithm, 0);
     ImGui::RadioButton("Flood Fill 8", &g_selectedFillAlgorithm, 1);
     ImGui::RadioButton("Scan-line", &g_selectedFillAlgorithm, 2);
     
+    // Color code scan-line fill button
+    if (currentMode == MODE_FILLING_POLYGON) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.8f, 0.0f, 1.0f)); // Green for active
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+    }
+    
     if (ImGui::Button("Preencher Polígono (Scan-line)")) {
         UI_FillPolygonScanline();
+    }
+    
+    if (currentMode == MODE_FILLING_POLYGON) {
+        ImGui::PopStyleColor(3);
     }
     
     ImGui::TextWrapped("1. Clique em 'Desenhar Polígono'");
